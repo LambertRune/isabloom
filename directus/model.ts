@@ -61,4 +61,21 @@ export const OFFER_ITEM_FIELDS = [
   "images",
 ] as const;
 
+export const BLOG_STATUSES = {
+  draft: "Concept",
+  published: "Gepubliceerd",
+} as const;
+
+export const PORTFOLIO_FIELDS = ["image", "title", "alt", "category", "sort"] as const;
+export const TEAM_FIELDS = ["name", "title", "photo", "sort", "active"] as const;
+export const BLOG_FIELDS = [
+  "title",
+  "slug",
+  "intro",
+  "content",
+  "cover",
+  "published_at",
+  "status",
+] as const;
+
 export type ContentCollection = (typeof CONTENT_COLLECTIONS)[number];

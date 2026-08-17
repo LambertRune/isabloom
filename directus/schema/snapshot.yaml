@@ -309,6 +309,7 @@ fields:
       special:
         - file
       interface: file-image
+      required: false
       translations:
         - language: nl-NL
           translation: Logo
@@ -323,6 +324,7 @@ fields:
       special:
         - file
       interface: file-image
+      required: false
       translations:
         - language: nl-NL
           translation: Favicon
@@ -527,6 +529,267 @@ fields:
       translations:
         - language: nl-NL
           translation: Afbeeldingen
+  - collection: portfolio_items
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: portfolio_items
+    field: image
+    type: uuid
+    schema:
+      is_nullable: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      interface: file-image
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Afbeelding
+  - collection: portfolio_items
+    field: title
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Titel
+  - collection: portfolio_items
+    field: alt
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Alt-tekst
+  - collection: portfolio_items
+    field: category
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Categorie
+  - collection: portfolio_items
+    field: sort
+    type: integer
+    schema:
+      default_value: 0
+      is_nullable: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Volgorde
+  - collection: team_members
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: team_members
+    field: name
+    type: string
+    schema:
+      default_value: null
+      is_nullable: false
+      is_unique: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Naam
+  - collection: team_members
+    field: title
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Functie
+  - collection: team_members
+    field: photo
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      interface: file-image
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Foto
+  - collection: team_members
+    field: sort
+    type: integer
+    schema:
+      default_value: 0
+      is_nullable: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Volgorde
+  - collection: team_members
+    field: active
+    type: boolean
+    schema:
+      default_value: true
+      is_nullable: false
+    meta:
+      interface: boolean
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Actief
+  - collection: blog_posts
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: blog_posts
+    field: title
+    type: string
+    schema:
+      default_value: null
+      is_nullable: false
+      is_unique: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Titel
+  - collection: blog_posts
+    field: slug
+    type: string
+    schema:
+      is_nullable: false
+      is_unique: true
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Slug
+      options:
+        slug: true
+  - collection: blog_posts
+    field: intro
+    type: text
+    schema:
+      is_nullable: true
+    meta:
+      interface: input-multiline
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Intro
+  - collection: blog_posts
+    field: content
+    type: text
+    schema:
+      is_nullable: true
+    meta:
+      interface: input-rich-text-html
+      translations:
+        - language: nl-NL
+          translation: Inhoud
+  - collection: blog_posts
+    field: cover
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      interface: file-image
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Coverfoto
+  - collection: blog_posts
+    field: published_at
+    type: timestamp
+    schema:
+      is_nullable: true
+    meta:
+      interface: datetime
+      translations:
+        - language: nl-NL
+          translation: Publicatiedatum
+  - collection: blog_posts
+    field: status
+    type: string
+    schema:
+      default_value: draft
+      is_nullable: false
+    meta:
+      interface: select-dropdown
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Status
+      options:
+        choices:
+          - value: draft
+            text: Concept
+          - value: published
+            text: Gepubliceerd
 relations:
   - collection: site_settings
     field: logo
@@ -536,6 +799,24 @@ relations:
       junction_field: null
   - collection: site_settings
     field: favicon
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: null
+  - collection: portfolio_items
+    field: image
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: null
+  - collection: team_members
+    field: photo
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: null
+  - collection: blog_posts
+    field: cover
     related_collection: directus_files
     meta:
       one_field: null

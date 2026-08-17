@@ -1,4 +1,5 @@
 import {
+  BLOG_STATUSES,
   CONTENT_COLLECTIONS,
   COUNTRY_DEFAULT,
   DIRECTUS_VERSION,
@@ -148,19 +149,27 @@ function booleanField(
   };
 }
 
-function fileField(collection: string, field: string, label: string, kind: "image" | "file"): SnapshotField {
+function fileField(
+  collection: string,
+  field: string,
+  label: string,
+  kind: "image" | "file",
+  options?: { required?: boolean },
+): SnapshotField {
+  const required = options?.required ?? false;
   return {
     collection,
     field,
     type: "uuid",
     schema: {
-      is_nullable: true,
+      is_nullable: !required,
       foreign_key_table: "directus_files",
       foreign_key_column: "id",
     },
     meta: {
       special: ["file"],
       interface: kind === "image" ? "file-image" : "file",
+      required,
       translations: nl(label),
     },
   };
@@ -213,6 +222,32 @@ function selectField(
       options: {
         choices: Object.entries(choices).map(([value, text]) => ({ value, text })),
       },
+    },
+  };
+}
+
+function richTextField(collection: string, field: string, label: string): SnapshotField {
+  return {
+    collection,
+    field,
+    type: "text",
+    schema: { is_nullable: true },
+    meta: {
+      interface: "input-rich-text-html",
+      translations: nl(label),
+    },
+  };
+}
+
+function timestampField(collection: string, field: string, label: string): SnapshotField {
+  return {
+    collection,
+    field,
+    type: "timestamp",
+    schema: { is_nullable: true },
+    meta: {
+      interface: "datetime",
+      translations: nl(label),
     },
   };
 }
@@ -318,6 +353,41 @@ function offerItemsFields(): SnapshotField[] {
   ];
 }
 
+function portfolioItemsFields(): SnapshotField[] {
+  return [
+    uuidId("portfolio_items"),
+    fileField("portfolio_items", "image", "Afbeelding", "image", { required: true }),
+    stringField("portfolio_items", "title", "Titel"),
+    stringField("portfolio_items", "alt", "Alt-tekst"),
+    stringField("portfolio_items", "category", "Categorie"),
+    integerField("portfolio_items", "sort", "Volgorde", 0),
+  ];
+}
+
+function teamMembersFields(): SnapshotField[] {
+  return [
+    uuidId("team_members"),
+    stringField("team_members", "name", "Naam", { required: true }),
+    stringField("team_members", "title", "Functie"),
+    fileField("team_members", "photo", "Foto", "image"),
+    integerField("team_members", "sort", "Volgorde", 0),
+    booleanField("team_members", "active", "Actief", true),
+  ];
+}
+
+function blogPostsFields(): SnapshotField[] {
+  return [
+    uuidId("blog_posts"),
+    stringField("blog_posts", "title", "Titel", { required: true }),
+    slugField("blog_posts"),
+    textField("blog_posts", "intro", "Intro"),
+    richTextField("blog_posts", "content", "Inhoud"),
+    fileField("blog_posts", "cover", "Coverfoto", "image"),
+    timestampField("blog_posts", "published_at", "Publicatiedatum"),
+    selectField("blog_posts", "status", "Status", BLOG_STATUSES, "draft"),
+  ];
+}
+
 function fileRelation(collection: string, field: string): SnapshotRelation {
   return {
     collection,
@@ -349,7 +419,20 @@ export function buildSnapshot(): Snapshot {
     directus: DIRECTUS_VERSION,
     vendor: "postgres",
     collections: [...content, ...junctions],
-    fields: [...siteSettingsFields(), ...servicesFields(), ...offerItemsFields()],
-    relations: [fileRelation("site_settings", "logo"), fileRelation("site_settings", "favicon")],
+    fields: [
+      ...siteSettingsFields(),
+      ...servicesFields(),
+      ...offerItemsFields(),
+      ...portfolioItemsFields(),
+      ...teamMembersFields(),
+      ...blogPostsFields(),
+    ],
+    relations: [
+      fileRelation("site_settings", "logo"),
+      fileRelation("site_settings", "favicon"),
+      fileRelation("portfolio_items", "image"),
+      fileRelation("team_members", "photo"),
+      fileRelation("blog_posts", "cover"),
+    ],
   };
 }

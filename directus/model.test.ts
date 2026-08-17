@@ -1,13 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
+  BLOG_FIELDS,
+  BLOG_STATUSES,
   CONTENT_COLLECTIONS,
   COUNTRY_DEFAULT,
   FORBIDDEN_COLLECTIONS,
   JUNCTION_COLLECTIONS,
   OFFER_CATEGORIES,
   OFFER_ITEM_FIELDS,
+  PORTFOLIO_FIELDS,
   SERVICE_FIELDS,
   SITE_SETTINGS_FIELDS,
+  TEAM_FIELDS,
 } from "./model.ts";
 import { getCollection, getField, loadSnapshot, nlLabel } from "./load-snapshot.ts";
 
@@ -83,6 +87,51 @@ describe("services and offer_items", () => {
     const choices = choicesOf(category);
     expect(Object.fromEntries(choices.map((item) => [item.value, item.text]))).toEqual(
       OFFER_CATEGORIES,
+    );
+  });
+});
+
+describe("portfolio, team, and blog", () => {
+  it("has Dutch labels on every portfolio field", () => {
+    const snapshot = loadSnapshot();
+    for (const field of PORTFOLIO_FIELDS) {
+      expect(nlLabel(getField(snapshot, "portfolio_items", field).meta?.translations)).toBeTruthy();
+    }
+  });
+
+  it("has Dutch labels on every team field", () => {
+    const snapshot = loadSnapshot();
+    for (const field of TEAM_FIELDS) {
+      expect(nlLabel(getField(snapshot, "team_members", field).meta?.translations)).toBeTruthy();
+    }
+  });
+
+  it("has Dutch labels on every blog field", () => {
+    const snapshot = loadSnapshot();
+    for (const field of BLOG_FIELDS) {
+      expect(nlLabel(getField(snapshot, "blog_posts", field).meta?.translations)).toBeTruthy();
+    }
+  });
+
+  it("requires portfolio image", () => {
+    const snapshot = loadSnapshot();
+    const image = getField(snapshot, "portfolio_items", "image");
+    expect(image.schema?.is_nullable).toBe(false);
+  });
+
+  it("uses WYSIWYG for blog content", () => {
+    const snapshot = loadSnapshot();
+    expect(getField(snapshot, "blog_posts", "content").meta?.interface).toBe(
+      "input-rich-text-html",
+    );
+  });
+
+  it("maps blog status keys to Dutch choices", () => {
+    const snapshot = loadSnapshot();
+    const status = getField(snapshot, "blog_posts", "status");
+    const choices = choicesOf(status);
+    expect(Object.fromEntries(choices.map((item) => [item.value, item.text]))).toEqual(
+      BLOG_STATUSES,
     );
   });
 });
