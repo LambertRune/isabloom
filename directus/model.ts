@@ -1,5 +1,23 @@
 export const DIRECTUS_VERSION = "12.0.2";
 
+export const COUNTRY_DEFAULT = "BE";
+
+export const SITE_SETTINGS_FIELDS = [
+  "company_name",
+  "street",
+  "postal_code",
+  "city",
+  "country",
+  "phone",
+  "email",
+  "instagram_url",
+  "facebook_url",
+  "maps_url",
+  "opening_hours",
+  "logo",
+  "favicon",
+] as const;
+
 export const CONTENT_COLLECTIONS = [
   "site_settings",
   "services",

@@ -101,5 +101,241 @@ collections:
           singular: Aanbodbestand
     schema:
       name: offer_item_files
-fields: []
-relations: []
+fields:
+  - collection: site_settings
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: site_settings
+    field: company_name
+    type: string
+    schema:
+      default_value: null
+      is_nullable: false
+      is_unique: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Bedrijfsnaam
+  - collection: site_settings
+    field: street
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Straat en nummer
+  - collection: site_settings
+    field: postal_code
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Postcode
+  - collection: site_settings
+    field: city
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Gemeente
+  - collection: site_settings
+    field: country
+    type: string
+    schema:
+      default_value: BE
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Land
+  - collection: site_settings
+    field: phone
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Telefoon
+  - collection: site_settings
+    field: email
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: E-mail
+  - collection: site_settings
+    field: instagram_url
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Instagram
+  - collection: site_settings
+    field: facebook_url
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Facebook
+  - collection: site_settings
+    field: maps_url
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Google Maps-route
+  - collection: site_settings
+    field: opening_hours
+    type: json
+    schema:
+      is_nullable: true
+    meta:
+      interface: list
+      translations:
+        - language: nl-NL
+          translation: Openingsuren
+      note: day is monday tot sunday. opens en closes zijn HH:mm. closed true negeert de tijden.
+      options:
+        fields:
+          - field: day
+            name: Dag
+            type: string
+            meta:
+              interface: select-dropdown
+              width: half
+              options:
+                choices:
+                  - text: Maandag
+                    value: monday
+                  - text: Dinsdag
+                    value: tuesday
+                  - text: Woensdag
+                    value: wednesday
+                  - text: Donderdag
+                    value: thursday
+                  - text: Vrijdag
+                    value: friday
+                  - text: Zaterdag
+                    value: saturday
+                  - text: Zondag
+                    value: sunday
+          - field: opens
+            name: Open
+            type: string
+            meta:
+              interface: input
+              width: half
+          - field: closes
+            name: Gesloten om
+            type: string
+            meta:
+              interface: input
+              width: half
+          - field: closed
+            name: Gesloten
+            type: boolean
+            meta:
+              interface: boolean
+              width: half
+  - collection: site_settings
+    field: logo
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      interface: file-image
+      translations:
+        - language: nl-NL
+          translation: Logo
+  - collection: site_settings
+    field: favicon
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      interface: file-image
+      translations:
+        - language: nl-NL
+          translation: Favicon
+relations:
+  - collection: site_settings
+    field: logo
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: null
+  - collection: site_settings
+    field: favicon
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: null
