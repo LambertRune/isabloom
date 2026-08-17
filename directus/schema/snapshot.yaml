@@ -790,6 +790,152 @@ fields:
             text: Concept
           - value: published
             text: Gepubliceerd
+  - collection: season_themes
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: season_themes
+    field: name
+    type: string
+    schema:
+      default_value: null
+      is_nullable: false
+      is_unique: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Naam
+  - collection: season_themes
+    field: start_date
+    type: date
+    schema:
+      is_nullable: false
+    meta:
+      interface: datetime
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Startdatum
+  - collection: season_themes
+    field: end_date
+    type: date
+    schema:
+      is_nullable: false
+    meta:
+      interface: datetime
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Einddatum
+  - collection: season_themes
+    field: priority
+    type: integer
+    schema:
+      default_value: 0
+      is_nullable: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Prioriteit
+  - collection: season_themes
+    field: accent_color
+    type: string
+    schema:
+      is_nullable: true
+    meta:
+      interface: input
+      translations:
+        - language: nl-NL
+          translation: Accentkleur
+      validation:
+        _and:
+          - accent_color:
+              _regex: ^$|^#([0-9A-Fa-f]{6})$
+      validation_message: Accentkleur moet een hex-waarde zijn (#RRGGBB).
+      options:
+        trim: true
+        clear: ""
+  - collection: season_themes
+    field: hero_image
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      interface: file-image
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Hero-afbeelding
+  - collection: season_themes
+    field: hero_video
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      interface: file
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Hero-video
+  - collection: season_themes
+    field: hero_title
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Hero-titel
+  - collection: season_themes
+    field: hero_subtitle
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Hero-ondertitel
+  - collection: season_themes
+    field: force_active
+    type: boolean
+    schema:
+      default_value: false
+      is_nullable: false
+    meta:
+      interface: boolean
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Handmatig forceren
 relations:
   - collection: site_settings
     field: logo
@@ -817,6 +963,18 @@ relations:
       junction_field: null
   - collection: blog_posts
     field: cover
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: null
+  - collection: season_themes
+    field: hero_image
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: null
+  - collection: season_themes
+    field: hero_video
     related_collection: directus_files
     meta:
       one_field: null

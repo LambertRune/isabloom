@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  ACCENT_COLOR_MESSAGE,
+  ACCENT_COLOR_REGEX,
   BLOG_FIELDS,
   BLOG_STATUSES,
   CONTENT_COLLECTIONS,
@@ -9,6 +11,7 @@ import {
   OFFER_CATEGORIES,
   OFFER_ITEM_FIELDS,
   PORTFOLIO_FIELDS,
+  SEASON_THEME_FIELDS,
   SERVICE_FIELDS,
   SITE_SETTINGS_FIELDS,
   TEAM_FIELDS,
@@ -133,5 +136,26 @@ describe("portfolio, team, and blog", () => {
     expect(Object.fromEntries(choices.map((item) => [item.value, item.text]))).toEqual(
       BLOG_STATUSES,
     );
+  });
+});
+
+describe("season_themes", () => {
+  it("labels every field in Dutch", () => {
+    const snapshot = loadSnapshot();
+    for (const field of SEASON_THEME_FIELDS) {
+      expect(nlLabel(getField(snapshot, "season_themes", field).meta?.translations)).toBeTruthy();
+    }
+  });
+
+  it("validates accent_color with native regex that allows empty", () => {
+    const snapshot = loadSnapshot();
+    const accent = getField(snapshot, "season_themes", "accent_color");
+    const validation = accent.meta?.validation as {
+      _and?: Array<{ accent_color?: { _regex?: string } }>;
+    };
+    const regex = validation?._and?.[0]?.accent_color?._regex;
+    expect(regex).toBe(ACCENT_COLOR_REGEX);
+    expect(accent.meta?.validation_message).toBe(ACCENT_COLOR_MESSAGE);
+    expect(accent.meta?.options).toMatchObject({ trim: true });
   });
 });

@@ -1,4 +1,6 @@
 import {
+  ACCENT_COLOR_MESSAGE,
+  ACCENT_COLOR_REGEX,
   BLOG_STATUSES,
   CONTENT_COLLECTIONS,
   COUNTRY_DEFAULT,
@@ -252,6 +254,47 @@ function timestampField(collection: string, field: string, label: string): Snaps
   };
 }
 
+function dateField(collection: string, field: string, label: string, required = false): SnapshotField {
+  return {
+    collection,
+    field,
+    type: "date",
+    schema: { is_nullable: !required },
+    meta: {
+      interface: "datetime",
+      required,
+      translations: nl(label),
+    },
+  };
+}
+
+function accentColorField(collection: string): SnapshotField {
+  return {
+    collection,
+    field: "accent_color",
+    type: "string",
+    schema: { is_nullable: true },
+    meta: {
+      interface: "input",
+      translations: nl("Accentkleur"),
+      validation: {
+        _and: [
+          {
+            accent_color: {
+              _regex: ACCENT_COLOR_REGEX,
+            },
+          },
+        ],
+      },
+      validation_message: ACCENT_COLOR_MESSAGE,
+      options: {
+        trim: true,
+        clear: "",
+      },
+    },
+  };
+}
+
 function openingHoursField(): SnapshotField {
   return {
     collection: "site_settings",
@@ -388,6 +431,22 @@ function blogPostsFields(): SnapshotField[] {
   ];
 }
 
+function seasonThemesFields(): SnapshotField[] {
+  return [
+    uuidId("season_themes"),
+    stringField("season_themes", "name", "Naam", { required: true }),
+    dateField("season_themes", "start_date", "Startdatum", true),
+    dateField("season_themes", "end_date", "Einddatum", true),
+    integerField("season_themes", "priority", "Prioriteit", 0),
+    accentColorField("season_themes"),
+    fileField("season_themes", "hero_image", "Hero-afbeelding", "image"),
+    fileField("season_themes", "hero_video", "Hero-video", "file"),
+    stringField("season_themes", "hero_title", "Hero-titel"),
+    stringField("season_themes", "hero_subtitle", "Hero-ondertitel"),
+    booleanField("season_themes", "force_active", "Handmatig forceren", false),
+  ];
+}
+
 function fileRelation(collection: string, field: string): SnapshotRelation {
   return {
     collection,
@@ -426,6 +485,7 @@ export function buildSnapshot(): Snapshot {
       ...portfolioItemsFields(),
       ...teamMembersFields(),
       ...blogPostsFields(),
+      ...seasonThemesFields(),
     ],
     relations: [
       fileRelation("site_settings", "logo"),
@@ -433,6 +493,8 @@ export function buildSnapshot(): Snapshot {
       fileRelation("portfolio_items", "image"),
       fileRelation("team_members", "photo"),
       fileRelation("blog_posts", "cover"),
+      fileRelation("season_themes", "hero_image"),
+      fileRelation("season_themes", "hero_video"),
     ],
   };
 }

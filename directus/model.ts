@@ -78,4 +78,20 @@ export const BLOG_FIELDS = [
   "status",
 ] as const;
 
+export const ACCENT_COLOR_REGEX = "^$|^#([0-9A-Fa-f]{6})$";
+export const ACCENT_COLOR_MESSAGE = "Accentkleur moet een hex-waarde zijn (#RRGGBB).";
+
+export const SEASON_THEME_FIELDS = [
+  "name",
+  "start_date",
+  "end_date",
+  "priority",
+  "accent_color",
+  "hero_image",
+  "hero_video",
+  "hero_title",
+  "hero_subtitle",
+  "force_active",
+] as const;
+
 export type ContentCollection = (typeof CONTENT_COLLECTIONS)[number];
