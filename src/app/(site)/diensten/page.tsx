@@ -29,7 +29,7 @@ export default async function DienstenPage() {
 
       <ul className="mt-16 flex flex-col gap-24">
         {services.map((service, index) => (
-          <li key={service.title}>
+          <li key={service.title} id={service.slug ?? undefined}>
             <RevealOnScroll>
               <div
                 className={`grid gap-10 md:grid-cols-2 md:items-center ${

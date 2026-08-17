@@ -1,6 +1,7 @@
 import { readItems, readSingleton } from "@directus/sdk";
 import { AANBOD } from "@/content/aanbod";
 import { HOME } from "@/content/homepage";
+import { slugFromTitle } from "@/lib/beheer/slug.ts";
 import { getDirectus } from "./client.ts";
 import { mapHomeContent, type CmsService, type HomeContent } from "./map-content.ts";
 
@@ -75,6 +76,7 @@ export async function loadServices() {
   return HOME.services.map((service) => ({
     title: service.title,
     text: service.text,
+    slug: slugFromTitle(service.title),
     image: null,
   }));
 }

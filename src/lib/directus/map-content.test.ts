@@ -12,11 +12,12 @@ describe("Directus home mapping", () => {
     });
 
     expect(mapped.heroTitle).toBe(HOME.heroTitle);
-    expect(mapped.services.map((item) => item.title)).toEqual(
-      HOME.services.map((item) => item.title),
-    );
+    expect(mapped.services).toEqual([]);
+    expect(mapped.portfolio).toEqual([]);
+    expect(mapped.team).toEqual([]);
     expect(mapped.phone).toBeNull();
     expect(mapped.email).toBeNull();
+    expect(mapped.facebookUrl).toBeNull();
     expect(mapped.logo).toBeNull();
   });
 
@@ -28,6 +29,7 @@ describe("Directus home mapping", () => {
         phone: "+32 50 00 00 00",
         email: "info@example.invalid",
         instagram_url: "https://instagram.com/isabloom",
+        facebook_url: "https://facebook.com/isabloom",
         maps_url: "https://maps.google.com/?q=Zwevezele",
         logo: "logo-file-id",
         hero_title: null,
@@ -47,7 +49,10 @@ describe("Directus home mapping", () => {
 
     expect(mapped.phone).toBe("+32 50 00 00 00");
     expect(mapped.email).toBe("info@example.invalid");
+    expect(mapped.instagramUrl).toBe("https://instagram.com/isabloom");
+    expect(mapped.facebookUrl).toBe("https://facebook.com/isabloom");
     expect(mapped.services[0]?.text).toBe("Etalages uit Directus.");
+    expect(mapped.services[0]?.slug).toBe("business-styling");
     expect(mapped.portfolio[0]?.title).toBe("Atelier");
     expect(mapped.team[0]?.name).toBe("Isa");
     expect(mapped.logo).toBe("logo-file-id");

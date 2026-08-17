@@ -7,6 +7,7 @@ export type CmsSettings = {
   phone: string | null;
   email: string | null;
   instagram_url: string | null;
+  facebook_url?: string | null;
   maps_url: string | null;
   logo?: string | null;
   hero_title?: string | null;
@@ -35,12 +36,13 @@ export type CmsTeam = {
 export type HomeContent = {
   heroTitle: string;
   heroLead: string;
-  services: Array<{ title: string; text: string; image: string | null }>;
+  services: Array<{ title: string; text: string; slug: string | null; image: string | null }>;
   portfolio: Array<{ title: string; image: string | null }>;
   team: Array<{ name: string; title: string; photo: string | null }>;
   phone: string | null;
   email: string | null;
   instagramUrl: string | null;
+  facebookUrl: string | null;
   mapsUrl: string | null;
   city: string;
   logo: string | null;
@@ -53,35 +55,23 @@ export function mapHomeContent(input: {
   team: CmsTeam[];
 }): HomeContent {
   const settings = input.settings;
-  const services =
-    input.services.length > 0
-      ? input.services.map((service) => ({
-          title: service.title,
-          text: service.short_text ?? "",
-          image: service.images[0] ?? null,
-        }))
-      : HOME.services.map((service) => ({
-          title: service.title,
-          text: service.text,
-          image: null,
-        }));
+  const services = input.services.slice(0, 4).map((service) => ({
+    title: service.title,
+    text: service.short_text ?? "",
+    slug: service.slug,
+    image: service.images[0] ?? null,
+  }));
 
-  const portfolio =
-    input.portfolio.length > 0
-      ? input.portfolio.map((item) => ({
-          title: item.title ?? item.alt ?? "Portfolio",
-          image: item.image,
-        }))
-      : [];
+  const portfolio = input.portfolio.slice(0, 6).map((item) => ({
+    title: item.title ?? item.alt ?? "Portfolio",
+    image: item.image,
+  }));
 
-  const team =
-    input.team.length > 0
-      ? input.team.map((member) => ({
-          name: member.name,
-          title: member.title ?? "",
-          photo: member.photo,
-        }))
-      : [];
+  const team = input.team.map((member) => ({
+    name: member.name,
+    title: member.title ?? "",
+    photo: member.photo,
+  }));
 
   return {
     heroTitle: settings?.hero_title || HOME.heroTitle,
@@ -92,6 +82,7 @@ export function mapHomeContent(input: {
     phone: settings?.phone || null,
     email: settings?.email || null,
     instagramUrl: settings?.instagram_url || null,
+    facebookUrl: settings?.facebook_url || null,
     mapsUrl: settings?.maps_url || null,
     city: settings?.city || "Zwevezele",
     logo: firstFileId(settings?.logo),
