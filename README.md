@@ -4,7 +4,7 @@ Website en CMS voor Isabloom. Directus 12 voor content, Next.js voor de publieke
 
 ## Website
 
-De startpagina is een sectieshell: navigatie, hero, merkbelofte, diensten, portfolio, team en contact. Foto's zijn placeholders. Nog geen Directus en nog geen GSAP.
+De startpagina is een sectieshell. `/diensten` en `/aanbod` hebben dezelfde placeholder-aanpak. Foto's volgen later. Nog geen Directus en nog geen GSAP.
 
 ```bash
 npm install
