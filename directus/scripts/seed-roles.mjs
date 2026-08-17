@@ -198,13 +198,13 @@ async function upsertWebsiteReader(token, websiteRoleId) {
     return;
   }
   const query = new URLSearchParams({
-    "filter[email][_eq]": "website@isabloom.local",
+    "filter[email][_eq]": "website@example.com",
   });
   const existing = await request(`/users?${query.toString()}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   const payload = {
-    email: "website@isabloom.local",
+    email: "website@example.com",
     password: `${staticToken}-local`,
     role: websiteRoleId,
     token: staticToken,
