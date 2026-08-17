@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const PUBLIC_URL = (process.env.PUBLIC_URL ?? "http://localhost:8055").replace(/\/$/, "");
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
@@ -125,6 +126,28 @@ async function upsertPolicy(token, role, roleId) {
   return policyId;
 }
 
+export function hasNonEmptyFilter(permissions) {
+  return Boolean(
+    permissions &&
+      typeof permissions === "object" &&
+      !Array.isArray(permissions) &&
+      Object.keys(permissions).length > 0,
+  );
+}
+
+export function handlePermissionPostError(error, body) {
+  const restricted =
+    error instanceof Error && error.message.includes("custom_permission_rules_enabled");
+  if (restricted && hasNonEmptyFilter(body.permissions)) {
+    throw new Error(
+      `Item filters on ${body.collection}.${body.action} need a Directus license (LICENSE_KEY). ` +
+        `Directus rejected them with custom_permission_rules_enabled. ` +
+        `The seed will not grant Website read on those collections without a license.`,
+    );
+  }
+  throw error;
+}
+
 async function postPermission(token, body) {
   const headers = { Authorization: `Bearer ${token}` };
   try {
@@ -134,19 +157,7 @@ async function postPermission(token, body) {
       body: JSON.stringify(body),
     });
   } catch (error) {
-    const restricted =
-      error instanceof Error && error.message.includes("custom_permission_rules_enabled");
-    if (!restricted || !body.permissions || Object.keys(body.permissions).length === 0) {
-      throw error;
-    }
-    console.warn(
-      `Directus Core rejected custom permission filters on ${body.collection}.${body.action}; seeding full access instead.`,
-    );
-    return request("/permissions", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ ...body, permissions: {} }),
-    });
+    handlePermissionPostError(error, body);
   }
 }
 
@@ -205,7 +216,9 @@ async function main() {
   await setDefaultLanguage(token);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
