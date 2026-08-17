@@ -1,8 +1,27 @@
 # Isabloom
 
-CMS-laag voor Isabloom op Directus 12. Het publieke frontend volgt in een latere fase.
+Website en CMS voor Isabloom. Directus 12 voor content, Next.js voor de publieke site.
 
-## Lokaal opstarten
+## Website (typografieproef)
+
+Nog geen echte inhoud. De startpagina toont alleen palet en lettertypes.
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+Kleuren en fontnamen staan in `src/design/tokens.ts` en worden herhaald in `src/app/globals.css`.
+
+## CMS lokaal
 
 1. Kopieer de omgevingsvariabelen:
 
@@ -32,7 +51,7 @@ Zet optioneel `LICENSE_KEY` (of `DIRECTUS_LICENSE_KEY`) in `.env` als je een Dir
 npm test
 ```
 
-De tests controleren het snapshot-contract (collecties, velden, Nederlandse labels). Docker is daarvoor niet nodig.
+De tests controleren het snapshot-contract (collecties, velden, Nederlandse labels) en de design-tokens. Docker is daarvoor niet nodig.
 
 ## Veld toevoegen
 
