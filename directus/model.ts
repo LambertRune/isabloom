@@ -35,4 +35,30 @@ export const JUNCTION_COLLECTIONS = [
 
 export const FORBIDDEN_COLLECTIONS = ["products"] as const;
 
+export const OFFER_CATEGORIES = {
+  shop: "Winkel",
+  christmas_rental: "Verhuur Kerst",
+  flower_rental: "Verhuur Bloemen",
+} as const;
+
+export const SERVICE_FIELDS = [
+  "title",
+  "slug",
+  "short_text",
+  "long_text",
+  "sort",
+  "cta_text",
+  "cta_link",
+  "images",
+] as const;
+
+export const OFFER_ITEM_FIELDS = [
+  "title",
+  "category",
+  "text",
+  "sort",
+  "active",
+  "images",
+] as const;
+
 export type ContentCollection = (typeof CONTENT_COLLECTIONS)[number];

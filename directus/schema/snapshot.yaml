@@ -326,6 +326,207 @@ fields:
       translations:
         - language: nl-NL
           translation: Favicon
+  - collection: services
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: services
+    field: title
+    type: string
+    schema:
+      default_value: null
+      is_nullable: false
+      is_unique: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Titel
+  - collection: services
+    field: slug
+    type: string
+    schema:
+      is_nullable: false
+      is_unique: true
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Slug
+      options:
+        slug: true
+  - collection: services
+    field: short_text
+    type: text
+    schema:
+      is_nullable: false
+    meta:
+      interface: input-multiline
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Korte tekst
+  - collection: services
+    field: long_text
+    type: text
+    schema:
+      is_nullable: true
+    meta:
+      interface: input-multiline
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Lange tekst
+  - collection: services
+    field: sort
+    type: integer
+    schema:
+      default_value: 0
+      is_nullable: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Volgorde
+  - collection: services
+    field: cta_text
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: CTA-tekst
+  - collection: services
+    field: cta_link
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: CTA-link
+  - collection: services
+    field: images
+    type: alias
+    meta:
+      special:
+        - m2m
+      interface: files
+      translations:
+        - language: nl-NL
+          translation: Afbeeldingen
+  - collection: offer_items
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: offer_items
+    field: title
+    type: string
+    schema:
+      default_value: null
+      is_nullable: false
+      is_unique: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Titel
+  - collection: offer_items
+    field: category
+    type: string
+    schema:
+      default_value: shop
+      is_nullable: false
+    meta:
+      interface: select-dropdown
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Categorie
+      options:
+        choices:
+          - value: shop
+            text: Winkel
+          - value: christmas_rental
+            text: Verhuur Kerst
+          - value: flower_rental
+            text: Verhuur Bloemen
+  - collection: offer_items
+    field: text
+    type: text
+    schema:
+      is_nullable: true
+    meta:
+      interface: input-multiline
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Tekst
+  - collection: offer_items
+    field: sort
+    type: integer
+    schema:
+      default_value: 0
+      is_nullable: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Volgorde
+  - collection: offer_items
+    field: active
+    type: boolean
+    schema:
+      default_value: true
+      is_nullable: false
+    meta:
+      interface: boolean
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Actief
+  - collection: offer_items
+    field: images
+    type: alias
+    meta:
+      special:
+        - m2m
+      interface: files
+      translations:
+        - language: nl-NL
+          translation: Afbeeldingen
 relations:
   - collection: site_settings
     field: logo

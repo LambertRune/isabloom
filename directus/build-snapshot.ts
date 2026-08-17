@@ -3,6 +3,7 @@ import {
   COUNTRY_DEFAULT,
   DIRECTUS_VERSION,
   JUNCTION_COLLECTIONS,
+  OFFER_CATEGORIES,
   type ContentCollection,
 } from "./model.ts";
 import type { Snapshot, SnapshotCollection, SnapshotField, SnapshotRelation } from "./load-snapshot.ts";
@@ -165,6 +166,57 @@ function fileField(collection: string, field: string, label: string, kind: "imag
   };
 }
 
+function slugField(collection: string): SnapshotField {
+  return {
+    collection,
+    field: "slug",
+    type: "string",
+    schema: { is_nullable: false, is_unique: true },
+    meta: {
+      interface: "input",
+      required: true,
+      translations: nl("Slug"),
+      options: { slug: true },
+    },
+  };
+}
+
+function aliasM2m(collection: string, field: string, label: string): SnapshotField {
+  return {
+    collection,
+    field,
+    type: "alias",
+    meta: {
+      special: ["m2m"],
+      interface: "files",
+      translations: nl(label),
+    },
+  };
+}
+
+function selectField(
+  collection: string,
+  field: string,
+  label: string,
+  choices: Record<string, string>,
+  defaultValue: string,
+): SnapshotField {
+  return {
+    collection,
+    field,
+    type: "string",
+    schema: { default_value: defaultValue, is_nullable: false },
+    meta: {
+      interface: "select-dropdown",
+      required: true,
+      translations: nl(label),
+      options: {
+        choices: Object.entries(choices).map(([value, text]) => ({ value, text })),
+      },
+    },
+  };
+}
+
 function openingHoursField(): SnapshotField {
   return {
     collection: "site_settings",
@@ -240,6 +292,32 @@ function siteSettingsFields(): SnapshotField[] {
   ];
 }
 
+function servicesFields(): SnapshotField[] {
+  return [
+    uuidId("services"),
+    stringField("services", "title", "Titel", { required: true }),
+    slugField("services"),
+    textField("services", "short_text", "Korte tekst", true),
+    textField("services", "long_text", "Lange tekst"),
+    integerField("services", "sort", "Volgorde", 0),
+    stringField("services", "cta_text", "CTA-tekst"),
+    stringField("services", "cta_link", "CTA-link"),
+    aliasM2m("services", "images", "Afbeeldingen"),
+  ];
+}
+
+function offerItemsFields(): SnapshotField[] {
+  return [
+    uuidId("offer_items"),
+    stringField("offer_items", "title", "Titel", { required: true }),
+    selectField("offer_items", "category", "Categorie", OFFER_CATEGORIES, "shop"),
+    textField("offer_items", "text", "Tekst"),
+    integerField("offer_items", "sort", "Volgorde", 0),
+    booleanField("offer_items", "active", "Actief", true),
+    aliasM2m("offer_items", "images", "Afbeeldingen"),
+  ];
+}
+
 function fileRelation(collection: string, field: string): SnapshotRelation {
   return {
     collection,
@@ -271,7 +349,7 @@ export function buildSnapshot(): Snapshot {
     directus: DIRECTUS_VERSION,
     vendor: "postgres",
     collections: [...content, ...junctions],
-    fields: [...siteSettingsFields()],
+    fields: [...siteSettingsFields(), ...servicesFields(), ...offerItemsFields()],
     relations: [fileRelation("site_settings", "logo"), fileRelation("site_settings", "favicon")],
   };
 }
