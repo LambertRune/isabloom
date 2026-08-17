@@ -7,6 +7,8 @@ import { VineRight } from "@/components/svg/VineRight";
 import { shouldPlayNavIntro } from "@/lib/animations/nav-intro";
 import { gsap, useGSAP } from "@/lib/gsap/register";
 
+const RANKS = ["left", "flower", "right"] as const;
+
 export function NavbarFlowerIntro() {
   const root = useRef<HTMLDivElement>(null);
 
@@ -16,11 +18,11 @@ export function NavbarFlowerIntro() {
       if (!node) {
         return;
       }
-      const paths = node.querySelectorAll("path, circle");
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const play = shouldPlayNavIntro(window.sessionStorage, reduced);
+      const allMarks = node.querySelectorAll("path, circle");
 
-      paths.forEach((path) => {
+      allMarks.forEach((path) => {
         if (!(path instanceof SVGGeometryElement)) {
           return;
         }
@@ -33,9 +35,12 @@ export function NavbarFlowerIntro() {
         return;
       }
 
-      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-      paths.forEach((path, index) => {
-        tl.to(path, { strokeDashoffset: 0, duration: 1.6 }, index * 0.22);
+      const tl = gsap.timeline({ defaults: { ease: "power2.out", duration: 1.8 } });
+      RANKS.forEach((rank) => {
+        const marks = node.querySelectorAll(
+          `[data-rank="${rank}"] path, [data-rank="${rank}"] circle`,
+        );
+        tl.to(marks, { strokeDashoffset: 0, stagger: 0.18 });
       });
     },
     { scope: root },
@@ -47,9 +52,18 @@ export function NavbarFlowerIntro() {
       className="pointer-events-none absolute inset-x-0 -top-3 z-10 h-24 text-gold md:-top-4 md:h-28"
       aria-hidden="true"
     >
-      <VineLeft className="absolute top-0 left-0 h-full w-[42%]" />
-      <FlowerHead className="absolute top-1 left-1/2 h-10 w-10 -translate-x-1/2 md:h-12 md:w-12" />
-      <VineRight className="absolute top-0 right-0 h-full w-[42%]" />
+      <div data-rank="left" className="absolute top-0 left-0 h-full w-[42%]">
+        <VineLeft className="h-full w-full" />
+      </div>
+      <div
+        data-rank="flower"
+        className="absolute top-1 left-1/2 h-10 w-10 -translate-x-1/2 md:h-12 md:w-12"
+      >
+        <FlowerHead className="h-full w-full" />
+      </div>
+      <div data-rank="right" className="absolute top-0 right-0 h-full w-[42%]">
+        <VineRight className="h-full w-full" />
+      </div>
     </div>
   );
 }

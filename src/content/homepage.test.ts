@@ -58,4 +58,19 @@ describe("homepage shell", () => {
     expect(read("src/app/(site)/diensten/page.tsx")).toContain("Diensten");
     expect(read("src/app/(site)/aanbod/page.tsx")).toContain("Aanbod");
   });
+
+  it("hides CMS preview sections when Directus has no items and does not invent contact details", () => {
+    const page = read("src/app/(site)/page.tsx");
+    expect(page).toContain("content.services.length");
+    expect(page).toContain("content.portfolio.length");
+    expect(page).toContain("content.team.length");
+    expect(page).not.toContain("PORTFOLIO_SLOTS");
+    expect(page).not.toContain("Portret volgt");
+    expect(page).toContain("HeroScrollCue");
+    expect(page).toContain("facebookUrl");
+    expect(page).toContain("portfolioHref");
+    expect(read("src/components/home/HeroScrollCue.tsx")).toContain(
+      'aria-label="Scroll naar volgende sectie"',
+    );
+  });
 });

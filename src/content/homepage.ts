@@ -8,7 +8,9 @@ export const HOME = {
   promiseBody:
     "Kwaliteit en duurzaamheid. Verzorgde, sfeervolle bloemstyling, afgestemd op de plek en het moment.",
   shopCaption: "De winkel",
-  servicesTitle: "Wat we doen",
+  servicesEyebrow: "Isabloom · Diensten",
+  servicesTitle: "Wat wij voor u doen",
+  servicesAllCta: "Bekijk alle diensten",
   services: [
     {
       title: "Business styling",
@@ -23,11 +25,13 @@ export const HOME = {
       text: "Bruiloften, communies, feesten en zakelijke momenten. Compositie en styling die passen bij het verhaal van de klant.",
     },
   ],
-  portfolioTitle: "Voorproefje uit het atelier",
+  portfolioEyebrow: "Isabloom · Portfolio",
+  portfolioTitle: "Een voorproefje van ons werk",
   portfolioCta: "Bekijk het volledige portfolio",
-  teamTitle: "Werkwijze",
+  teamEyebrow: "Isabloom · Team",
+  teamTitle: "Wie er voor u klaarstaat",
   teamBody:
-    "We werken persoonlijk en op maat, via een intake. Portretten en namen volgen uit het teamoverzicht.",
+    "Voorbeeldtekst: we werken persoonlijk en op maat, via een intake. Vervang deze zin in het beheerpaneel wanneer de werkwijze vastligt.",
   contactTitle: "Contact",
   contactBody:
     "Telefoon, mail, Instagram en openingsuren komen later uit de zaakgegevens. Tot dan: Zwevezele.",
