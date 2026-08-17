@@ -16,7 +16,7 @@ describe("diensten page", () => {
     expect(copy).toContain("Business styling");
     expect(copy).toContain("Home styling");
     expect(copy).toContain("Events");
-    expect(page).toContain("HOME.services");
+    expect(page).toContain("loadServices");
     expect(page).toContain("Contacteer ons");
     expect(page).not.toMatch(/prijs/i);
     expect(page).not.toMatch(/lorem ipsum/i);

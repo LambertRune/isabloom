@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { Hairline } from "@/components/Hairline";
-import { ImagePlaceholder } from "@/components/ImagePlaceholder";
+import { CmsImage } from "@/components/media/CmsImage";
 import { AANBOD } from "@/content/aanbod";
+import { loadOfferGroups } from "@/lib/directus/load-content.ts";
 
 export const metadata: Metadata = {
   title: "Aanbod",
@@ -10,7 +12,9 @@ export const metadata: Metadata = {
     "Winkel, verhuur kerst en verhuur bloemen bij Isabloom in Zwevezele.",
 };
 
-export default function AanbodPage() {
+export default async function AanbodPage() {
+  const groups = await loadOfferGroups();
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <header className="max-w-2xl">
@@ -38,31 +42,48 @@ export default function AanbodPage() {
       </header>
 
       <div className="mt-20 flex flex-col gap-24">
-        {AANBOD.sections.map((section) => (
-          <section key={section.id} id={section.id}>
-            <h2 className="font-serif text-3xl">{section.title}</h2>
-            <div className="mt-4 max-w-xl">
-              <Hairline />
-            </div>
-            <p className="mt-6 max-w-xl font-light leading-relaxed">{section.text}</p>
-            <ul className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3">
-              {["A", "B", "C"].map((slot) => (
-                <li key={slot}>
-                  <ImagePlaceholder
-                    label={`${section.title} ${slot}`}
-                    className="min-h-44 w-full"
-                  />
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/#contact"
-              className="mt-8 inline-block text-sm tracking-wide text-gold-deep"
-            >
-              {AANBOD.cta}
-            </Link>
-          </section>
-        ))}
+        {AANBOD.sections.map((section) => {
+          const items = groups[section.id] ?? [];
+          const tiles =
+            items.length > 0
+              ? items
+              : [
+                  { title: `${section.title} A`, text: "", image: null },
+                  { title: `${section.title} B`, text: "", image: null },
+                  { title: `${section.title} C`, text: "", image: null },
+                ];
+          return (
+            <RevealOnScroll key={section.id}>
+              <section id={section.id}>
+                <h2 className="font-serif text-3xl">{section.title}</h2>
+                <div className="mt-4 max-w-xl">
+                  <Hairline />
+                </div>
+                <p className="mt-6 max-w-xl font-light leading-relaxed">{section.text}</p>
+                <ul className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3">
+                  {tiles.map((item) => (
+                    <li key={item.title} className="flex flex-col gap-2">
+                      <CmsImage
+                        fileId={item.image}
+                        alt={item.title}
+                        className="min-h-44 w-full"
+                      />
+                      {item.text ? (
+                        <p className="text-sm font-light">{item.title}</p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/#contact"
+                  className="mt-8 inline-block text-sm tracking-wide text-gold-deep"
+                >
+                  {AANBOD.cta}
+                </Link>
+              </section>
+            </RevealOnScroll>
+          );
+        })}
       </div>
     </main>
   );

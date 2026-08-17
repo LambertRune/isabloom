@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { Hairline } from "@/components/Hairline";
-import { ImagePlaceholder } from "@/components/ImagePlaceholder";
-import { HOME } from "@/content/homepage";
+import { CmsImage } from "@/components/media/CmsImage";
+import { loadServices } from "@/lib/directus/load-content.ts";
 
 export const metadata: Metadata = {
   title: "Diensten",
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
     "Business styling, home styling en events door Isabloom in Zwevezele.",
 };
 
-export default function DienstenPage() {
+export default async function DienstenPage() {
+  const services = await loadServices();
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <header className="max-w-2xl">
@@ -25,35 +28,39 @@ export default function DienstenPage() {
       </header>
 
       <ul className="mt-16 flex flex-col gap-24">
-        {HOME.services.map((service, index) => (
-          <li key={service.title} id={service.title.toLowerCase().replace(" ", "-")}>
-            <div
-              className={`grid gap-10 md:grid-cols-2 md:items-center ${
-                index % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""
-              }`}
-            >
-              <div className="grid grid-cols-2 gap-3">
-                <ImagePlaceholder
-                  label={`${service.title} 1`}
-                  className="min-h-56 w-full"
-                />
-                <ImagePlaceholder
-                  label={`${service.title} 2`}
-                  className="min-h-56 w-full"
-                />
+        {services.map((service, index) => (
+          <li key={service.title}>
+            <RevealOnScroll>
+              <div
+                className={`grid gap-10 md:grid-cols-2 md:items-center ${
+                  index % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""
+                }`}
+              >
+                <div className="grid grid-cols-2 gap-3">
+                  <CmsImage
+                    fileId={service.image}
+                    alt={`${service.title} 1`}
+                    className="min-h-56 w-full"
+                  />
+                  <CmsImage
+                    fileId={null}
+                    alt={`${service.title} 2`}
+                    className="min-h-56 w-full"
+                  />
+                </div>
+                <div className="flex flex-col gap-5">
+                  <h2 className="font-serif text-3xl">{service.title}</h2>
+                  <Hairline />
+                  <p className="font-light leading-relaxed">{service.text}</p>
+                  <Link
+                    href="/#contact"
+                    className="w-fit bg-moss px-5 py-2.5 text-sm font-medium tracking-wide text-paper hover:bg-ink"
+                  >
+                    Contacteer ons
+                  </Link>
+                </div>
               </div>
-              <div className="flex flex-col gap-5">
-                <h2 className="font-serif text-3xl">{service.title}</h2>
-                <Hairline />
-                <p className="font-light leading-relaxed">{service.text}</p>
-                <Link
-                  href="/#contact"
-                  className="w-fit bg-moss px-5 py-2.5 text-sm font-medium tracking-wide text-paper hover:bg-ink"
-                >
-                  Contacteer ons
-                </Link>
-              </div>
-            </div>
+            </RevealOnScroll>
           </li>
         ))}
       </ul>

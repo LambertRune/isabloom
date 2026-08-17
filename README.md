@@ -2,9 +2,21 @@
 
 Website en CMS voor Isabloom. Directus 12 voor content, Next.js voor de publieke site.
 
-## Website
+## Lokaal als één geheel
 
-De startpagina is een sectieshell. `/diensten` en `/aanbod` hebben dezelfde placeholder-aanpak. Foto's volgen later. Nog geen Directus en nog geen GSAP.
+CMS en site naast elkaar:
+
+```bash
+cp .env.example .env
+# Zet ADMIN_PASSWORD en DIRECTUS_TOKEN (een lange willekeurige string).
+docker compose up -d
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) (site) en [http://localhost:8055](http://localhost:8055) (Directus). Wat je in Directus vult (diensten, team, contact, foto's) verschijnt op de site. Lege collecties vallen terug op de analyse-teksten en placeholders.
+
+De botanische ranken groeien één keer per browsersessie rond de navigatie. `prefers-reduced-motion` slaat die animatie over.
 
 ```bash
 npm install
@@ -41,9 +53,7 @@ Directus past bij opstarten automatisch `directus/schema/snapshot.yaml` toe. Een
 
 ### Licentie en Website-filters
 
-Directus Core weigert itemfilters op de rol **Website** (`custom_permission_rules_enabled`). Zonder geldige licentie stopt de seed met een fout zodra die filters worden gezet. De rol **Isabloom beheerder** kan al aangemaakt zijn vóór die fout.
-
-Zet optioneel `LICENSE_KEY` (of `DIRECTUS_LICENSE_KEY`) in `.env` als je een Directus-licentie hebt. Voeg geen verzonnen sleutel toe.
+Directus Core weigert itemfilters op de rol **Website** zonder licentie. De seed geeft dan unfiltered read en de Next.js-laag filtert zelf (actief, gepubliceerd). Met `LICENSE_KEY` blijven de filters in Directus staan.
 
 ## Tests zonder Docker
 
