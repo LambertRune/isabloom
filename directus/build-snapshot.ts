@@ -532,6 +532,7 @@ function m2mParentRelation(
     meta: {
       one_field: "images",
       junction_field: junctionField,
+      sort_field: "sort",
     },
   };
 }
@@ -552,18 +553,33 @@ function m2mFileRelation(
   };
 }
 
+function collectionSortField(name: string, fields: SnapshotField[]): string | null {
+  return fields.some((item) => item.collection === name && item.field === "sort") ? "sort" : null;
+}
+
 export function buildSnapshot(): Snapshot {
+  const fields = [
+    ...siteSettingsFields(),
+    ...servicesFields(),
+    ...offerItemsFields(),
+    ...portfolioItemsFields(),
+    ...teamMembersFields(),
+    ...blogPostsFields(),
+    ...seasonThemesFields(),
+    ...servicesFilesFields(),
+    ...offerItemFilesFields(),
+  ];
   const content = CONTENT_COLLECTIONS.map((name) =>
     collectionMeta(
       name,
       COLLECTION_LABELS[name],
       name === "site_settings",
       false,
-      name === "site_settings" ? null : "sort",
+      collectionSortField(name, fields),
     ),
   );
   const junctions = JUNCTION_COLLECTIONS.map((name) =>
-    collectionMeta(name, JUNCTION_LABELS[name], false, true, "sort"),
+    collectionMeta(name, JUNCTION_LABELS[name], false, true, collectionSortField(name, fields)),
   );
 
   return {
@@ -571,17 +587,7 @@ export function buildSnapshot(): Snapshot {
     directus: DIRECTUS_VERSION,
     vendor: "postgres",
     collections: [...content, ...junctions],
-    fields: [
-      ...siteSettingsFields(),
-      ...servicesFields(),
-      ...offerItemsFields(),
-      ...portfolioItemsFields(),
-      ...teamMembersFields(),
-      ...blogPostsFields(),
-      ...seasonThemesFields(),
-      ...servicesFilesFields(),
-      ...offerItemFilesFields(),
-    ],
+    fields,
     relations: [
       fileRelation("site_settings", "logo"),
       fileRelation("site_settings", "favicon"),

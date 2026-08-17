@@ -56,9 +56,11 @@ describe("role seed", () => {
   it("gives Website read-only access with publish filters", () => {
     const website = loadRoles().find((role) => role.name === "Website");
     expect(website?.appAccess).toBe(false);
-    for (const collection of [...CONTENT_COLLECTIONS, "directus_files"]) {
+    for (const collection of [...CONTENT_COLLECTIONS, ...JUNCTION_COLLECTIONS, "directus_files"]) {
       expect(website?.collections[collection]?.actions).toEqual(["read"]);
     }
+    expect(website?.collections.services_files.filter).toBeUndefined();
+    expect(website?.collections.offer_item_files.filter).toBeUndefined();
     expect(website?.collections.offer_items.filter).toEqual({ active: { _eq: true } });
     expect(website?.collections.team_members.filter).toEqual({ active: { _eq: true } });
     expect(website?.collections.blog_posts.filter).toEqual({ status: { _eq: "published" } });

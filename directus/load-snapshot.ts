@@ -54,6 +54,7 @@ export type SnapshotRelation = {
   meta?: {
     one_field?: string | null;
     junction_field?: string | null;
+    sort_field?: string | null;
   };
 };
 

@@ -61,7 +61,7 @@ collections:
     meta:
       singleton: false
       hidden: false
-      sort_field: sort
+      sort_field: null
       translations:
         - language: nl-NL
           translation: Blog
@@ -72,7 +72,7 @@ collections:
     meta:
       singleton: false
       hidden: false
-      sort_field: sort
+      sort_field: null
       translations:
         - language: nl-NL
           translation: Seizoensthema's
@@ -1109,6 +1109,7 @@ relations:
     meta:
       one_field: images
       junction_field: directus_files_id
+      sort_field: sort
   - collection: services_files
     field: directus_files_id
     related_collection: directus_files
@@ -1121,6 +1122,7 @@ relations:
     meta:
       one_field: images
       junction_field: directus_files_id
+      sort_field: sort
   - collection: offer_item_files
     field: directus_files_id
     related_collection: directus_files

@@ -77,6 +77,12 @@
       "season_themes": {
         "actions": ["read"]
       },
+      "services_files": {
+        "actions": ["read"]
+      },
+      "offer_item_files": {
+        "actions": ["read"]
+      },
       "directus_files": {
         "actions": ["read"]
       }

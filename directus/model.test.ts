@@ -32,6 +32,16 @@ describe("Directus snapshot contract", () => {
       expect(snapshot.collections.map((item) => item.collection)).not.toContain(name);
     }
   });
+
+  it("sets collection sort_field to sort only when a sort field exists", () => {
+    const snapshot = loadSnapshot();
+    for (const collection of snapshot.collections) {
+      const hasSort = snapshot.fields.some(
+        (item) => item.collection === collection.collection && item.field === "sort",
+      );
+      expect(collection.meta?.sort_field).toBe(hasSort ? "sort" : null);
+    }
+  });
 });
 
 describe("site_settings", () => {
@@ -154,6 +164,20 @@ describe("gallery junctions", () => {
     expect(oneFields).toContain("images");
     const tables = snapshot.relations.map((item) => item.collection);
     expect(tables).toEqual(expect.arrayContaining(["services_files", "offer_item_files"]));
+  });
+
+  it("sets sort_field on parent M2M relations while keeping junction sort columns", () => {
+    const snapshot = loadSnapshot();
+    const servicesParent = snapshot.relations.find(
+      (item) => item.collection === "services_files" && item.field === "services_id",
+    );
+    const offerParent = snapshot.relations.find(
+      (item) => item.collection === "offer_item_files" && item.field === "offer_items_id",
+    );
+    expect(servicesParent?.meta?.sort_field).toBe("sort");
+    expect(offerParent?.meta?.sort_field).toBe("sort");
+    expect(getField(snapshot, "services_files", "sort").field).toBe("sort");
+    expect(getField(snapshot, "offer_item_files", "sort").field).toBe("sort");
   });
 
   it("marks parent junction FKs as m2o and file FKs as file", () => {
