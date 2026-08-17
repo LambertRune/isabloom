@@ -2,9 +2,9 @@
 
 Website en CMS voor Isabloom. Directus 12 voor content, Next.js voor de publieke site.
 
-## Website (typografieproef)
+## Website
 
-Nog geen echte inhoud. De startpagina toont alleen palet en lettertypes.
+De startpagina is een sectieshell: navigatie, hero, merkbelofte, diensten, portfolio, team en contact. Foto's zijn placeholders. Nog geen Directus en nog geen GSAP.
 
 ```bash
 npm install
