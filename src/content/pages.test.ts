@@ -11,7 +11,7 @@ function read(relative: string): string {
 
 describe("diensten page", () => {
   it("expands the three analysis services with a contact CTA", () => {
-    const page = read("src/app/diensten/page.tsx");
+    const page = read("src/app/(site)/diensten/page.tsx");
     const copy = read("src/content/homepage.ts");
     expect(copy).toContain("Business styling");
     expect(copy).toContain("Home styling");
@@ -25,7 +25,7 @@ describe("diensten page", () => {
 
 describe("aanbod page", () => {
   it("uses anchors for Winkel, Verhuur Kerst and Verhuur Bloemen", () => {
-    const page = read("src/app/aanbod/page.tsx");
+    const page = read("src/app/(site)/aanbod/page.tsx");
     const copy = read("src/content/aanbod.ts");
     expect(copy).toContain('id: "winkel"');
     expect(copy).toContain('id: "verhuur-kerst"');

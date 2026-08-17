@@ -14,3 +14,11 @@ export function getDirectus() {
   const client = createDirectus(url).with(rest());
   return token ? client.with(staticToken(token)) : client;
 }
+
+export function getSessionDirectus(token: string) {
+  const url = getDirectusUrl();
+  if (!url) {
+    return null;
+  }
+  return createDirectus(url).with(rest()).with(staticToken(token));
+}

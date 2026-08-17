@@ -7,4 +7,5 @@ uploads/*
 .next
 out
 *.tsbuildinfo
+package-lock.json
 

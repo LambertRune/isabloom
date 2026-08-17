@@ -1,6 +1,6 @@
 # Isabloom
 
-Website en CMS voor Isabloom. Directus 12 voor content, Next.js voor de publieke site.
+Website en CMS voor Isabloom. Directus 12 is de database. Alle inhoud beheer je op de site zelf via `/beheer`.
 
 ## Lokaal als één geheel
 
@@ -10,25 +10,20 @@ CMS en site naast elkaar:
 cp .env.example .env
 # Zet ADMIN_PASSWORD en DIRECTUS_TOKEN (een lange willekeurige string).
 docker compose up -d
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) (site) en [http://localhost:8055](http://localhost:8055) (Directus). Wat je in Directus vult (diensten, team, contact, foto's) verschijnt op de site. Lege collecties vallen terug op de analyse-teksten en placeholders.
+Open [http://localhost:3000](http://localhost:3000) voor de site. Inhoud (logo, diensten, team, foto's) vul je in op [http://localhost:3000/beheer](http://localhost:3000/beheer) met het Directus-beheerdersaccount uit `ADMIN_EMAIL`. Directus op poort 8055 blijft de API. Bewerk content niet in de Directus-app.
+
+Lege collecties vallen terug op de analyse-teksten en placeholders. Zonder geüpload logo toont de navigatie de naam Isabloom, geen zelfgemaakt merkteken.
 
 De botanische ranken groeien één keer per browsersessie rond de navigatie. `prefers-reduced-motion` slaat die animatie over.
 
 ```bash
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-```bash
-npm test
-npm run lint
-npm run build
+pnpm test
+pnpm lint
+pnpm build
 ```
 
 Kleuren en fontnamen staan in `src/design/tokens.ts` en worden herhaald in `src/app/globals.css`.
@@ -47,7 +42,7 @@ Kleuren en fontnamen staan in `src/design/tokens.ts` en worden herhaald in `src/
    docker compose up
    ```
 
-3. Open [http://localhost:8055](http://localhost:8055) en log in met het e-mailadres uit `ADMIN_EMAIL` in `.env`.
+3. Open [http://localhost:3000/beheer](http://localhost:3000/beheer) en log in met het e-mailadres uit `ADMIN_EMAIL` in `.env`.
 
 Directus past bij opstarten automatisch `directus/schema/snapshot.yaml` toe. Een aparte seed-container maakt daarna de rollen aan.
 
@@ -58,7 +53,7 @@ Directus Core weigert itemfilters op de rol **Website** zonder licentie. De seed
 ## Tests zonder Docker
 
 ```bash
-npm test
+pnpm test
 ```
 
 De tests controleren het snapshot-contract (collecties, velden, Nederlandse labels) en de design-tokens. Docker is daarvoor niet nodig.
@@ -70,13 +65,13 @@ De tests controleren het snapshot-contract (collecties, velden, Nederlandse labe
 3. Genereer het snapshot opnieuw:
 
    ```bash
-   npm run cms:snapshot
+   pnpm cms:snapshot
    ```
 
 4. Controleer:
 
    ```bash
-   npm test
+   pnpm test
    ```
 
 5. Commit `directus/schema/snapshot.yaml` samen met je codewijzigingen.

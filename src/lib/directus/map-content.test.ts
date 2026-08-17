@@ -17,6 +17,7 @@ describe("Directus home mapping", () => {
     );
     expect(mapped.phone).toBeNull();
     expect(mapped.email).toBeNull();
+    expect(mapped.logo).toBeNull();
   });
 
   it("prefers Directus fields when they are filled", () => {
@@ -28,6 +29,7 @@ describe("Directus home mapping", () => {
         email: "info@example.invalid",
         instagram_url: "https://instagram.com/isabloom",
         maps_url: "https://maps.google.com/?q=Zwevezele",
+        logo: "logo-file-id",
         hero_title: null,
         hero_subtitle: null,
       },
@@ -48,5 +50,6 @@ describe("Directus home mapping", () => {
     expect(mapped.services[0]?.text).toBe("Etalages uit Directus.");
     expect(mapped.portfolio[0]?.title).toBe("Atelier");
     expect(mapped.team[0]?.name).toBe("Isa");
+    expect(mapped.logo).toBe("logo-file-id");
   });
 });

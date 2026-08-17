@@ -1,0 +1,203 @@
+.beheer {
+  min-height: 100dvh;
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.beheer-shell {
+  display: grid;
+  min-height: 100dvh;
+}
+
+@media (min-width: 900px) {
+  .beheer-shell {
+    grid-template-columns: 16rem 1fr;
+  }
+}
+
+.beheer-sidebar {
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-chalk);
+  padding: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .beheer-sidebar {
+    border-right: 1px solid var(--color-line);
+    border-bottom: 0;
+  }
+}
+
+.beheer-brand {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+}
+
+.beheer-muted {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.beheer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+}
+
+.beheer-nav a,
+.beheer-nav button {
+  text-align: left;
+  background: none;
+  border: 0;
+  color: var(--color-ink);
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.beheer-nav a:hover,
+.beheer-nav button:hover {
+  color: var(--color-gold-deep);
+}
+
+.beheer-main {
+  padding: 2rem 1.5rem 4rem;
+}
+
+.beheer-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 700px) {
+  .beheer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.beheer-card {
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  padding: 1.25rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.beheer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.beheer-field input,
+.beheer-field textarea,
+.beheer-field select {
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+
+.beheer-error {
+  color: #8a2a22;
+}
+
+.beheer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.beheer-btn {
+  background: var(--color-moss);
+  color: var(--color-paper);
+  border: 0;
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+}
+
+.beheer-btn-ghost {
+  background: transparent;
+  color: var(--color-gold-deep);
+  border: 1px solid var(--color-gold);
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+}
+
+.beheer-login {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.beheer-login-card {
+  width: min(26rem, 100%);
+  border: 1px solid var(--color-line);
+  padding: 2rem;
+}
+
+.beheer-preview {
+  max-width: 12rem;
+  border: 1px solid var(--color-line);
+}
+
+.beheer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.beheer-library {
+  position: fixed;
+  inset: 0;
+  background: rgb(31 42 36 / 0.45);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  z-index: 40;
+}
+
+.beheer-library-panel {
+  width: min(48rem, 100%);
+  max-height: 80dvh;
+  overflow: auto;
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  padding: 1.25rem;
+}
+
+.beheer-library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.beheer-library-item {
+  border: 1px solid var(--color-line);
+  background: var(--color-chalk);
+  padding: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.beheer-library-item img,
+.beheer-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.beheer-preview {
+  max-width: 12rem;
+  max-height: 12rem;
+  height: auto;
+  border: 1px solid var(--color-line);
+}

@@ -22,10 +22,11 @@ describe("homepage shell", () => {
       expect(nav).toContain(label);
     }
     expect(nav).toContain("Isabloom");
+    expect(nav).toContain("logoFileId");
   });
 
   it("has the analysis homepage sections", () => {
-    const page = read("src/app/page.tsx");
+    const page = read("src/app/(site)/page.tsx");
     for (const id of [
       "hero",
       "merkbelofte",
@@ -54,7 +55,7 @@ describe("homepage shell", () => {
   });
 
   it("keeps Dutch routes for Diensten and Aanbod", () => {
-    expect(read("src/app/diensten/page.tsx")).toContain("Diensten");
-    expect(read("src/app/aanbod/page.tsx")).toContain("Aanbod");
+    expect(read("src/app/(site)/diensten/page.tsx")).toContain("Diensten");
+    expect(read("src/app/(site)/aanbod/page.tsx")).toContain("Aanbod");
   });
 });

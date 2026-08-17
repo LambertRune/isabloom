@@ -9,7 +9,16 @@ const LEFT = [
 
 const RIGHT = [{ href: "/#team", label: "Werkwijze" }] as const;
 
-function Wordmark() {
+function Wordmark({ logoFileId }: { logoFileId: string | null }) {
+  if (logoFileId) {
+    return (
+      <Link href="/" className="flex justify-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={`/media/${logoFileId}`} alt="Isabloom" className="h-12 w-auto" />
+      </Link>
+    );
+  }
+
   return (
     <Link
       href="/"
@@ -26,7 +35,7 @@ function Wordmark() {
   );
 }
 
-export function Navbar() {
+export function Navbar({ logoFileId = null }: { logoFileId?: string | null }) {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-paper">
       <div className="relative mx-auto max-w-6xl px-6 pt-6 pb-4 md:pt-8">
@@ -45,7 +54,7 @@ export function Navbar() {
             ))}
           </ul>
           <div className="flex justify-center">
-            <Wordmark />
+            <Wordmark logoFileId={logoFileId} />
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 md:justify-end">
             {RIGHT.map((item) => (

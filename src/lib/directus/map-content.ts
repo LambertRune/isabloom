@@ -1,4 +1,5 @@
 import { HOME } from "@/content/homepage";
+import { firstFileId } from "@/lib/beheer/files.ts";
 
 export type CmsSettings = {
   company_name: string | null;
@@ -7,6 +8,7 @@ export type CmsSettings = {
   email: string | null;
   instagram_url: string | null;
   maps_url: string | null;
+  logo?: string | null;
   hero_title?: string | null;
   hero_subtitle?: string | null;
 } | null;
@@ -41,6 +43,7 @@ export type HomeContent = {
   instagramUrl: string | null;
   mapsUrl: string | null;
   city: string;
+  logo: string | null;
 };
 
 export function mapHomeContent(input: {
@@ -91,5 +94,6 @@ export function mapHomeContent(input: {
     instagramUrl: settings?.instagram_url || null,
     mapsUrl: settings?.maps_url || null,
     city: settings?.city || "Zwevezele",
+    logo: firstFileId(settings?.logo),
   };
 }
