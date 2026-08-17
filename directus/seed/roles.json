@@ -1,0 +1,91 @@
+[
+  {
+    "name": "Isabloom beheerder",
+    "appAccess": true,
+    "adminAccess": false,
+    "collections": {
+      "site_settings": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "services": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "offer_items": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "portfolio_items": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "team_members": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "blog_posts": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "season_themes": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "services_files": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "offer_item_files": {
+        "actions": ["create", "read", "update", "delete"]
+      },
+      "directus_files": {
+        "actions": ["create", "read", "update", "delete"]
+      }
+    }
+  },
+  {
+    "name": "Website",
+    "appAccess": false,
+    "adminAccess": false,
+    "collections": {
+      "site_settings": {
+        "actions": ["read"]
+      },
+      "services": {
+        "actions": ["read"]
+      },
+      "offer_items": {
+        "actions": ["read"],
+        "filter": {
+          "active": {
+            "_eq": true
+          }
+        }
+      },
+      "portfolio_items": {
+        "actions": ["read"]
+      },
+      "team_members": {
+        "actions": ["read"],
+        "filter": {
+          "active": {
+            "_eq": true
+          }
+        }
+      },
+      "blog_posts": {
+        "actions": ["read"],
+        "filter": {
+          "status": {
+            "_eq": "published"
+          }
+        }
+      },
+      "season_themes": {
+        "actions": ["read"]
+      },
+      "services_files": {
+        "actions": ["read"]
+      },
+      "offer_item_files": {
+        "actions": ["read"]
+      },
+      "directus_files": {
+        "actions": ["read"]
+      }
+    }
+  }
+]

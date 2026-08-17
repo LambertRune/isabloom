@@ -1,0 +1,17 @@
+{
+  "name": "isabloom",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "cms:snapshot": "tsx directus/write-snapshot.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10",
+    "yaml": "^2.9.0"
+  }
+}
