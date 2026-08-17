@@ -1,0 +1,105 @@
+version: 1
+directus: 12.0.2
+vendor: postgres
+collections:
+  - collection: site_settings
+    meta:
+      singleton: true
+      hidden: false
+      sort_field: null
+      translations:
+        - language: nl-NL
+          translation: Site-instellingen
+          singular: Site-instellingen
+    schema:
+      name: site_settings
+  - collection: services
+    meta:
+      singleton: false
+      hidden: false
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Diensten
+          singular: Dienst
+    schema:
+      name: services
+  - collection: offer_items
+    meta:
+      singleton: false
+      hidden: false
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Aanbod
+          singular: Aanboditem
+    schema:
+      name: offer_items
+  - collection: portfolio_items
+    meta:
+      singleton: false
+      hidden: false
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Portfolio
+          singular: Portfolio-item
+    schema:
+      name: portfolio_items
+  - collection: team_members
+    meta:
+      singleton: false
+      hidden: false
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Team
+          singular: Teamlid
+    schema:
+      name: team_members
+  - collection: blog_posts
+    meta:
+      singleton: false
+      hidden: false
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Blog
+          singular: Blogbericht
+    schema:
+      name: blog_posts
+  - collection: season_themes
+    meta:
+      singleton: false
+      hidden: false
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Seizoensthema's
+          singular: Seizoensthema
+    schema:
+      name: season_themes
+  - collection: services_files
+    meta:
+      singleton: false
+      hidden: true
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Dienstbestanden
+          singular: Dienstbestand
+    schema:
+      name: services_files
+  - collection: offer_item_files
+    meta:
+      singleton: false
+      hidden: true
+      sort_field: sort
+      translations:
+        - language: nl-NL
+          translation: Aanbodbestanden
+          singular: Aanbodbestand
+    schema:
+      name: offer_item_files
+fields: []
+relations: []
