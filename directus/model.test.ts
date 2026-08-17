@@ -155,6 +155,20 @@ describe("gallery junctions", () => {
     const tables = snapshot.relations.map((item) => item.collection);
     expect(tables).toEqual(expect.arrayContaining(["services_files", "offer_item_files"]));
   });
+
+  it("marks parent junction FKs as m2o and file FKs as file", () => {
+    const snapshot = loadSnapshot();
+    expect(getField(snapshot, "services_files", "services_id").meta?.special).toEqual(["m2o"]);
+    expect(getField(snapshot, "offer_item_files", "offer_items_id").meta?.special).toEqual([
+      "m2o",
+    ]);
+    expect(getField(snapshot, "services_files", "directus_files_id").meta?.special).toEqual([
+      "file",
+    ]);
+    expect(getField(snapshot, "offer_item_files", "directus_files_id").meta?.special).toEqual([
+      "file",
+    ]);
+  });
 });
 
 describe("season_themes", () => {

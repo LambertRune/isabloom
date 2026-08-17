@@ -957,6 +957,8 @@ fields:
       foreign_key_table: services
       foreign_key_column: id
     meta:
+      special:
+        - m2o
       hidden: true
       interface: select-dropdown-m2o
   - collection: services_files
@@ -1017,6 +1019,8 @@ fields:
       foreign_key_table: offer_items
       foreign_key_column: id
     meta:
+      special:
+        - m2o
       hidden: true
       interface: select-dropdown-m2o
   - collection: offer_item_files

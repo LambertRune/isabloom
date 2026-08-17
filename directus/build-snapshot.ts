@@ -474,6 +474,7 @@ function junctionParentFk(
       foreign_key_column: "id",
     },
     meta: {
+      special: ["m2o"],
       hidden: true,
       interface: "select-dropdown-m2o",
     },
