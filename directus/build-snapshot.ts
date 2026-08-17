@@ -459,6 +459,98 @@ function fileRelation(collection: string, field: string): SnapshotRelation {
   };
 }
 
+function junctionParentFk(
+  collection: string,
+  field: string,
+  parentCollection: string,
+): SnapshotField {
+  return {
+    collection,
+    field,
+    type: "uuid",
+    schema: {
+      is_nullable: true,
+      foreign_key_table: parentCollection,
+      foreign_key_column: "id",
+    },
+    meta: {
+      hidden: true,
+      interface: "select-dropdown-m2o",
+    },
+  };
+}
+
+function junctionFileFk(collection: string, field: string): SnapshotField {
+  return {
+    collection,
+    field,
+    type: "uuid",
+    schema: {
+      is_nullable: true,
+      foreign_key_table: "directus_files",
+      foreign_key_column: "id",
+    },
+    meta: {
+      special: ["file"],
+      hidden: true,
+      interface: "file",
+    },
+  };
+}
+
+function servicesFilesFields(): SnapshotField[] {
+  return [
+    uuidId("services_files"),
+    junctionParentFk("services_files", "services_id", "services"),
+    junctionFileFk("services_files", "directus_files_id"),
+    integerField("services_files", "sort", "Volgorde", 0),
+    stringField("services_files", "alt", "Alt-tekst"),
+  ];
+}
+
+function offerItemFilesFields(): SnapshotField[] {
+  return [
+    uuidId("offer_item_files"),
+    junctionParentFk("offer_item_files", "offer_items_id", "offer_items"),
+    junctionFileFk("offer_item_files", "directus_files_id"),
+    integerField("offer_item_files", "sort", "Volgorde", 0),
+    stringField("offer_item_files", "alt", "Alt-tekst"),
+  ];
+}
+
+function m2mParentRelation(
+  junction: string,
+  parentField: string,
+  parentCollection: string,
+  junctionField: string,
+): SnapshotRelation {
+  return {
+    collection: junction,
+    field: parentField,
+    related_collection: parentCollection,
+    meta: {
+      one_field: "images",
+      junction_field: junctionField,
+    },
+  };
+}
+
+function m2mFileRelation(
+  junction: string,
+  fileFieldName: string,
+  parentField: string,
+): SnapshotRelation {
+  return {
+    collection: junction,
+    field: fileFieldName,
+    related_collection: "directus_files",
+    meta: {
+      one_field: null,
+      junction_field: parentField,
+    },
+  };
+}
+
 export function buildSnapshot(): Snapshot {
   const content = CONTENT_COLLECTIONS.map((name) =>
     collectionMeta(
@@ -486,6 +578,8 @@ export function buildSnapshot(): Snapshot {
       ...teamMembersFields(),
       ...blogPostsFields(),
       ...seasonThemesFields(),
+      ...servicesFilesFields(),
+      ...offerItemFilesFields(),
     ],
     relations: [
       fileRelation("site_settings", "logo"),
@@ -495,6 +589,10 @@ export function buildSnapshot(): Snapshot {
       fileRelation("blog_posts", "cover"),
       fileRelation("season_themes", "hero_image"),
       fileRelation("season_themes", "hero_video"),
+      m2mParentRelation("services_files", "services_id", "services", "directus_files_id"),
+      m2mFileRelation("services_files", "directus_files_id", "services_id"),
+      m2mParentRelation("offer_item_files", "offer_items_id", "offer_items", "directus_files_id"),
+      m2mFileRelation("offer_item_files", "directus_files_id", "offer_items_id"),
     ],
   };
 }

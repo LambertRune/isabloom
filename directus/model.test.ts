@@ -139,6 +139,24 @@ describe("portfolio, team, and blog", () => {
   });
 });
 
+describe("gallery junctions", () => {
+  it("gives each junction sort and alt fields with Dutch labels", () => {
+    const snapshot = loadSnapshot();
+    for (const collection of JUNCTION_COLLECTIONS) {
+      expect(nlLabel(getField(snapshot, collection, "sort").meta?.translations)).toBe("Volgorde");
+      expect(nlLabel(getField(snapshot, collection, "alt").meta?.translations)).toBe("Alt-tekst");
+    }
+  });
+
+  it("links services.images and offer_items.images through the junctions", () => {
+    const snapshot = loadSnapshot();
+    const oneFields = snapshot.relations.map((item) => item.meta?.one_field);
+    expect(oneFields).toContain("images");
+    const tables = snapshot.relations.map((item) => item.collection);
+    expect(tables).toEqual(expect.arrayContaining(["services_files", "offer_item_files"]));
+  });
+});
+
 describe("season_themes", () => {
   it("labels every field in Dutch", () => {
     const snapshot = loadSnapshot();

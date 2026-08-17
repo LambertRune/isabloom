@@ -936,6 +936,126 @@ fields:
       translations:
         - language: nl-NL
           translation: Handmatig forceren
+  - collection: services_files
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: services_files
+    field: services_id
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: services
+      foreign_key_column: id
+    meta:
+      hidden: true
+      interface: select-dropdown-m2o
+  - collection: services_files
+    field: directus_files_id
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      hidden: true
+      interface: file
+  - collection: services_files
+    field: sort
+    type: integer
+    schema:
+      default_value: 0
+      is_nullable: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Volgorde
+  - collection: services_files
+    field: alt
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Alt-tekst
+  - collection: offer_item_files
+    field: id
+    type: uuid
+    schema:
+      is_primary_key: true
+      is_nullable: false
+      is_unique: true
+    meta:
+      special:
+        - uuid
+      hidden: true
+      interface: input
+      translations: null
+  - collection: offer_item_files
+    field: offer_items_id
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: offer_items
+      foreign_key_column: id
+    meta:
+      hidden: true
+      interface: select-dropdown-m2o
+  - collection: offer_item_files
+    field: directus_files_id
+    type: uuid
+    schema:
+      is_nullable: true
+      foreign_key_table: directus_files
+      foreign_key_column: id
+    meta:
+      special:
+        - file
+      hidden: true
+      interface: file
+  - collection: offer_item_files
+    field: sort
+    type: integer
+    schema:
+      default_value: 0
+      is_nullable: false
+    meta:
+      interface: input
+      required: true
+      translations:
+        - language: nl-NL
+          translation: Volgorde
+  - collection: offer_item_files
+    field: alt
+    type: string
+    schema:
+      default_value: null
+      is_nullable: true
+      is_unique: false
+    meta:
+      interface: input
+      required: false
+      translations:
+        - language: nl-NL
+          translation: Alt-tekst
 relations:
   - collection: site_settings
     field: logo
@@ -979,3 +1099,27 @@ relations:
     meta:
       one_field: null
       junction_field: null
+  - collection: services_files
+    field: services_id
+    related_collection: services
+    meta:
+      one_field: images
+      junction_field: directus_files_id
+  - collection: services_files
+    field: directus_files_id
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: services_id
+  - collection: offer_item_files
+    field: offer_items_id
+    related_collection: offer_items
+    meta:
+      one_field: images
+      junction_field: directus_files_id
+  - collection: offer_item_files
+    field: directus_files_id
+    related_collection: directus_files
+    meta:
+      one_field: null
+      junction_field: offer_items_id
