@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  directus:
+    image: directus/directus:12.0.2
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8055:8055"
+    environment:
+      SECRET: ${DIRECTUS_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PUBLIC_URL: ${PUBLIC_URL}
+      DB_CLIENT: pg
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./directus/schema/snapshot.yaml:/directus/schema/snapshot.yaml:ro,z
+      - ./directus/scripts/entrypoint.sh:/directus/custom-entrypoint.sh:ro,z
+      - uploads:/directus/uploads
+    entrypoint: ["/bin/sh", "/directus/custom-entrypoint.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:8055/server/ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  seed:
+    image: node:22-alpine
+    depends_on:
+      directus:
+        condition: service_healthy
+    environment:
+      PUBLIC_URL: http://directus:8055
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ./directus/seed/roles.json:/seed/roles.json:ro,z
+      - ./directus/scripts/seed-roles.mjs:/seed-roles.mjs:ro,z
+    command: ["node", "/seed-roles.mjs"]
+    restart: "no"
+
+volumes:
+  postgres_data:
+  uploads:
