@@ -53,7 +53,7 @@ describe("homepage shell", () => {
     expect(copy).not.toMatch(/@/);
   });
 
-  it("keeps Dutch stub routes for Diensten and Aanbod", () => {
+  it("keeps Dutch routes for Diensten and Aanbod", () => {
     expect(read("src/app/diensten/page.tsx")).toContain("Diensten");
     expect(read("src/app/aanbod/page.tsx")).toContain("Aanbod");
   });
