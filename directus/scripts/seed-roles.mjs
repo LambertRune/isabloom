@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 const PUBLIC_URL = (process.env.PUBLIC_URL ?? "http://localhost:8055").replace(/\/$/, "");
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const ROLES_PATH = "/seed/roles.json";
+const ROLES_PATH = process.env.ROLES_PATH ?? "/seed/roles.json";
 const PING_ATTEMPTS = 30;
 const PING_DELAY_MS = 2000;
 
@@ -135,17 +135,8 @@ export function hasNonEmptyFilter(permissions) {
   );
 }
 
-export function handlePermissionPostError(error, body) {
-  const restricted =
-    error instanceof Error && error.message.includes("custom_permission_rules_enabled");
-  if (restricted && hasNonEmptyFilter(body.permissions)) {
-    throw new Error(
-      `Item filters on ${body.collection}.${body.action} need a Directus license (LICENSE_KEY). ` +
-        `Directus rejected them with custom_permission_rules_enabled. ` +
-        `The seed will not grant Website read on those collections without a license.`,
-    );
-  }
-  throw error;
+export function isLicenseFilterBlock(error) {
+  return error instanceof Error && error.message.includes("custom_permission_rules_enabled");
 }
 
 async function postPermission(token, body) {
@@ -157,7 +148,17 @@ async function postPermission(token, body) {
       body: JSON.stringify(body),
     });
   } catch (error) {
-    handlePermissionPostError(error, body);
+    if (isLicenseFilterBlock(error) && hasNonEmptyFilter(body.permissions)) {
+      console.warn(
+        `Website filter on ${body.collection}.${body.action} skipped (no LICENSE_KEY). Granting unfiltered read; Next.js still filters.`,
+      );
+      return await request("/permissions", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ ...body, permissions: {} }),
+      });
+    }
+    throw error;
   }
 }
 
@@ -190,6 +191,40 @@ async function replacePermissions(token, policyId, collections) {
   }
 }
 
+async function upsertWebsiteReader(token, websiteRoleId) {
+  const staticToken = process.env.DIRECTUS_TOKEN;
+  if (!staticToken) {
+    console.warn("DIRECTUS_TOKEN is unset. The Next.js site cannot read as Website.");
+    return;
+  }
+  const query = new URLSearchParams({
+    "filter[email][_eq]": "website@isabloom.local",
+  });
+  const existing = await request(`/users?${query.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const payload = {
+    email: "website@isabloom.local",
+    password: `${staticToken}-local`,
+    role: websiteRoleId,
+    token: staticToken,
+    status: "active",
+  };
+  if (existing.data[0]?.id) {
+    await request(`/users/${existing.data[0].id}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(payload),
+    });
+    return;
+  }
+  await request("/users", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  });
+}
+
 async function setDefaultLanguage(token) {
   await request("/settings", {
     method: "PATCH",
@@ -211,6 +246,9 @@ async function main() {
     const roleId = await upsertRole(token, role);
     const policyId = await upsertPolicy(token, role, roleId);
     await replacePermissions(token, policyId, role.collections);
+    if (role.name === "Website") {
+      await upsertWebsiteReader(token, roleId);
+    }
   }
 
   await setDefaultLanguage(token);

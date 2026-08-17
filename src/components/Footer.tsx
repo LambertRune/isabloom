@@ -1,12 +1,14 @@
 import { Hairline } from "@/components/Hairline";
+import { PairLeaves } from "@/components/svg/PairLeaves";
 
-export function Footer() {
+export function Footer({ city = "Zwevezele" }: { city?: string }) {
   return (
     <footer className="border-t border-line px-6 py-10">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4">
+        <PairLeaves className="h-12 w-16 text-gold" />
         <Hairline />
         <p className="text-center text-sm tracking-[0.16em] text-muted uppercase">
-          Isabloom · Zwevezele
+          Isabloom · {city}
         </p>
       </div>
     </footer>

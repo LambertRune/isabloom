@@ -53,6 +53,7 @@ services:
       PUBLIC_URL: http://directus:8055
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DIRECTUS_TOKEN: ${DIRECTUS_TOKEN:-}
     volumes:
       - ./directus/seed/roles.json:/seed/roles.json:ro,z
       - ./directus/scripts/seed-roles.mjs:/seed-roles.mjs:ro,z
