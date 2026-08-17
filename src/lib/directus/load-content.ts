@@ -1,6 +1,7 @@
 import { readItems, readSingleton } from "@directus/sdk";
 import { AANBOD } from "@/content/aanbod";
 import { HOME } from "@/content/homepage";
+import { offerCategorySlug, type OfferCategory } from "@/lib/aanbod/categories.ts";
 import { getDirectus } from "./client.ts";
 import { mapHomeContent, type CmsService, type HomeContent } from "./map-content.ts";
 
@@ -97,7 +98,7 @@ export async function loadOfferGroups() {
     const groups = { ...fallback };
     for (const item of items as Array<{
       title: string;
-      category: "shop" | "christmas_rental" | "flower_rental";
+      category: OfferCategory;
       text: string | null;
       active?: boolean;
       images?: FileJunction[];
@@ -105,12 +106,7 @@ export async function loadOfferGroups() {
       if (item.active === false) {
         continue;
       }
-      const id =
-        item.category === "shop"
-          ? "winkel"
-          : item.category === "christmas_rental"
-            ? "verhuur-kerst"
-            : "verhuur-bloemen";
+      const id = offerCategorySlug(item.category);
       groups[id].push({
         title: item.title,
         text: item.text ?? "",

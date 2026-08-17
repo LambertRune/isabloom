@@ -1,15 +1,16 @@
+"use client";
+
 import Link from "next/link";
-import { NavbarFlowerIntro } from "@/components/animations/NavbarFlowerIntro";
+import { NavbarBar } from "@/components/nav/NavbarBar";
 
 const LEFT = [
   { href: "/", label: "Start" },
   { href: "/diensten", label: "Diensten" },
-  { href: "/aanbod", label: "Aanbod" },
 ] as const;
 
 const RIGHT = [{ href: "/#team", label: "Werkwijze" }] as const;
 
-function Wordmark({ logoFileId }: { logoFileId: string | null }) {
+export function Wordmark({ logoFileId }: { logoFileId: string | null }) {
   if (logoFileId) {
     return (
       <Link href="/" className="flex justify-center">
@@ -37,44 +38,12 @@ function Wordmark({ logoFileId }: { logoFileId: string | null }) {
 
 export function Navbar({ logoFileId = null }: { logoFileId?: string | null }) {
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-paper">
-      <div className="relative mx-auto max-w-6xl px-6 pt-6 pb-4 md:pt-8">
-        <NavbarFlowerIntro />
-        <nav
-          className="relative z-20 grid grid-cols-1 items-center gap-4 md:grid-cols-3"
-          aria-label="Hoofdnavigatie"
-        >
-          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm tracking-wide text-ink md:justify-start">
-            {LEFT.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="hover:text-gold-deep">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className="flex justify-center">
-            <Wordmark logoFileId={logoFileId} />
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 md:justify-end">
-            {RIGHT.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm tracking-wide text-ink hover:text-gold-deep"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link
-              href="/#contact"
-              className="bg-moss px-4 py-2 text-sm font-medium tracking-wide text-paper hover:bg-ink"
-            >
-              Contact
-            </Link>
-          </div>
-        </nav>
-      </div>
-    </header>
+    <NavbarBar
+      wordmark={<Wordmark logoFileId={logoFileId} />}
+      left={LEFT}
+      right={RIGHT}
+      aanbodLabel="Aanbod"
+      contactLabel="Contact"
+    />
   );
 }
