@@ -53,6 +53,7 @@ describe("Directus home mapping", () => {
     expect(mapped.facebookUrl).toBe("https://facebook.com/isabloom");
     expect(mapped.services[0]?.text).toBe("Etalages uit Directus.");
     expect(mapped.services[0]?.slug).toBe("business-styling");
+    expect(mapped.services[0]?.images).toEqual([]);
     expect(mapped.portfolio[0]?.title).toBe("Atelier");
     expect(mapped.team[0]?.name).toBe("Isa");
     expect(mapped.logo).toBe("logo-file-id");

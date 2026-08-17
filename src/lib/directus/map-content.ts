@@ -36,7 +36,13 @@ export type CmsTeam = {
 export type HomeContent = {
   heroTitle: string;
   heroLead: string;
-  services: Array<{ title: string; text: string; slug: string | null; image: string | null }>;
+  services: Array<{
+    title: string;
+    text: string;
+    slug: string | null;
+    image: string | null;
+    images: string[];
+  }>;
   portfolio: Array<{ title: string; image: string | null }>;
   team: Array<{ name: string; title: string; photo: string | null }>;
   phone: string | null;
@@ -60,6 +66,7 @@ export function mapHomeContent(input: {
     text: service.short_text ?? "",
     slug: service.slug,
     image: service.images[0] ?? null,
+    images: service.images,
   }));
 
   const portfolio = input.portfolio.slice(0, 6).map((item) => ({

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { tokenCssProperties } from "@/design/tokens.ts";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -28,6 +30,7 @@ export default function RootLayout({
     <html
       lang="nl"
       className={`${fraunces.variable} ${sourceSans.variable}`}
+      style={tokenCssProperties() as CSSProperties}
     >
       <body className="min-h-dvh bg-paper text-ink antialiased">{children}</body>
     </html>

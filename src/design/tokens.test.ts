@@ -1,8 +1,9 @@
+import { describe, expect, it } from "vitest";
+import { contrastRatio } from "./contrast.ts";
+import { FONTS, FORBIDDEN_SURFACE, TOKENS, tokenCssProperties } from "./tokens.ts";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
-import { FONTS, FORBIDDEN_SURFACE, TOKENS } from "./tokens.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 
@@ -16,13 +17,24 @@ describe("design tokens", () => {
     expect(TOKENS.chalk.toUpperCase()).not.toBe(FORBIDDEN_SURFACE);
   });
 
-  it("uses the brief gold range until the logo can be sampled", () => {
+  it("uses a darker goldDeep so 14px links pass WCAG AA on paper", () => {
     expect(TOKENS.gold).toBe("#A67C3D");
-    expect(TOKENS.goldDeep).toBe("#8C6D3F");
+    expect(TOKENS.goldDeep).toBe("#7C6136");
+    expect(contrastRatio(TOKENS.ink, TOKENS.paper)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(TOKENS.moss, TOKENS.paper)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(TOKENS.goldDeep, TOKENS.paper)).toBeGreaterThanOrEqual(4.5);
   });
 
   it("uses moss as the CTA accent, not a generic SaaS purple", () => {
     expect(TOKENS.moss).toBe("#1F3D2B");
+  });
+
+  it("adds a warm night surface and floral accents", () => {
+    expect(TOKENS.night).toBe("#141210");
+    expect(TOKENS.blush).toMatch(/^#[0-9A-F]{6}$/i);
+    expect(TOKENS.berry).toMatch(/^#[0-9A-F]{6}$/i);
+    expect(TOKENS.leaf).toMatch(/^#[0-9A-F]{6}$/i);
+    expect(contrastRatio(TOKENS.paper, TOKENS.night)).toBeGreaterThanOrEqual(10);
   });
 
   it("pairs Fraunces with Source Sans 3", () => {
@@ -32,16 +44,19 @@ describe("design tokens", () => {
 });
 
 describe("token CSS contract", () => {
-  it("publishes every token as a CSS custom property", () => {
+  it("publishes tokens from TypeScript onto CSS variables, not a second hex palette", () => {
     const css = read("src/app/globals.css");
-    expect(css).toContain(`--color-paper: ${TOKENS.paper}`);
-    expect(css).toContain(`--color-chalk: ${TOKENS.chalk}`);
-    expect(css).toContain(`--color-ink: ${TOKENS.ink}`);
-    expect(css).toContain(`--color-muted: ${TOKENS.muted}`);
-    expect(css).toContain(`--color-gold: ${TOKENS.gold}`);
-    expect(css).toContain(`--color-gold-deep: ${TOKENS.goldDeep}`);
-    expect(css).toContain(`--color-moss: ${TOKENS.moss}`);
-    expect(css).toContain(`--color-line: ${TOKENS.line}`);
+    const layout = read("src/app/layout.tsx");
+    const properties = tokenCssProperties();
+
+    expect(layout).toContain("tokenCssProperties");
+    expect(properties["--token-paper"]).toBe(TOKENS.paper);
+    expect(properties["--token-gold-deep"]).toBe(TOKENS.goldDeep);
+    expect(properties["--token-night"]).toBe(TOKENS.night);
+    expect(css).toContain("--color-paper: var(--token-paper)");
+    expect(css).toContain("--color-gold-deep: var(--token-gold-deep)");
+    expect(css).toContain("--color-night: var(--token-night)");
+    expect(css).not.toContain(`--color-paper: ${TOKENS.paper}`);
   });
 
   it("does not use pure white as a surface", () => {
@@ -52,6 +67,13 @@ describe("token CSS contract", () => {
   it("does not default body type to Inter", () => {
     const css = read("src/app/globals.css");
     expect(css).not.toMatch(/--font-sans:\s*["']?Inter/);
+  });
+
+  it("gives keyboard focus and color transitions to interactive elements", () => {
+    const css = read("src/app/globals.css");
+    expect(css).toContain(":focus-visible");
+    expect(css).toContain("transition");
+    expect(css).toContain("prefers-reduced-motion");
   });
 });
 

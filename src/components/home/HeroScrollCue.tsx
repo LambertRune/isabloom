@@ -5,7 +5,7 @@ export function HeroScrollCue() {
     <a
       href="#merkbelofte"
       aria-label="Scroll naar volgende sectie"
-      className="mt-8 flex w-fit flex-col items-start gap-3 text-gold-deep"
+      className="mt-8 flex w-fit flex-col items-start gap-3 font-semibold text-gold-deep"
     >
       <span className="text-sm tracking-[0.16em] uppercase">{HOME.scrollLabel}</span>
       <svg

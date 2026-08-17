@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { NavbarBar } from "@/components/nav/NavbarBar";
+import { cmsLogoLoader } from "@/lib/media/cms-image-loader.ts";
 
 const LEFT = [
   { href: "/", label: "Start" },
@@ -14,8 +16,16 @@ export function Wordmark({ logoFileId }: { logoFileId: string | null }) {
   if (logoFileId) {
     return (
       <Link href="/" className="flex justify-center">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={`/media/${logoFileId}`} alt="Isabloom" className="h-12 w-auto" />
+        <Image
+          src={`/media/${logoFileId}`}
+          alt="Isabloom"
+          width={180}
+          height={48}
+          priority
+          loader={cmsLogoLoader}
+          className="h-12 w-auto"
+          style={{ width: "auto", height: "3rem" }}
+        />
       </Link>
     );
   }
@@ -23,7 +33,7 @@ export function Wordmark({ logoFileId }: { logoFileId: string | null }) {
   return (
     <Link
       href="/"
-      className="flex flex-col items-center gap-2 text-ink no-underline"
+      className="flex flex-col items-center gap-2 text-inherit no-underline"
     >
       <span className="flex gap-1.5" aria-hidden="true">
         <i className="block size-1 rounded-full bg-gold" />

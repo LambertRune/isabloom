@@ -18,7 +18,7 @@ export default async function AanbodPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <header className="max-w-2xl">
-        <p className="text-sm font-light tracking-[0.18em] text-muted uppercase">
+        <p className="text-sm font-light tracking-[0.18em] text-berry uppercase">
           Isabloom
         </p>
         <h1 className="mt-4 font-serif text-4xl sm:text-5xl">{AANBOD.title}</h1>
@@ -33,7 +33,7 @@ export default async function AanbodPage() {
             <a
               key={section.id}
               href={`#${section.id}`}
-              className="text-gold-deep hover:text-ink"
+              className="font-semibold text-gold-deep hover:text-ink"
             >
               {section.title}
             </a>
@@ -55,7 +55,7 @@ export default async function AanbodPage() {
           return (
             <RevealOnScroll key={section.id}>
               <section id={section.id}>
-                <h2 className="font-serif text-3xl">{section.title}</h2>
+                <h2 className="font-serif text-4xl">{section.title}</h2>
                 <div className="mt-4 max-w-xl">
                   <Hairline />
                 </div>
@@ -76,7 +76,7 @@ export default async function AanbodPage() {
                 </ul>
                 <Link
                   href="/#contact"
-                  className="mt-8 inline-block text-sm tracking-wide text-gold-deep"
+                  className="mt-8 inline-block text-sm font-semibold tracking-wide text-gold-deep"
                 >
                   {AANBOD.cta}
                 </Link>

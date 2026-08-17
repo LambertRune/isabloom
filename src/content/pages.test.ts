@@ -18,7 +18,19 @@ describe("diensten page", () => {
     expect(copy).toContain("Events");
     expect(page).toContain("loadServices");
     expect(page).toContain("Contacteer ons");
+    expect(page).not.toContain("fileId={null}");
+    expect(page).toContain("service.images");
     expect(page).not.toMatch(/prijs/i);
+    const loader = read("src/lib/directus/load-content.ts");
+    expect(loader).toContain("images.sort");
+    expect(loader).toContain('_sort: ["sort"]');
+    expect(loader).toContain("sortedFileIds");
+    expect(loader).not.toMatch(
+      /export async function loadServices\(\) \{\s*const home = await loadHomeContent/,
+    );
+    expect(read("src/components/media/CmsImage.tsx")).toContain("next/image");
+    expect(read("src/components/Navbar.tsx")).toContain("next/image");
+    expect(read("src/app/media/[id]/route.ts")).toContain("parseAssetTransforms");
     expect(page).not.toMatch(/lorem ipsum/i);
   });
 });

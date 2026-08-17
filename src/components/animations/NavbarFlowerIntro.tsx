@@ -49,7 +49,7 @@ export function NavbarFlowerIntro() {
   return (
     <div
       ref={root}
-      className="pointer-events-none absolute inset-x-0 -top-3 z-10 h-24 text-gold md:-top-4 md:h-28"
+      className="pointer-events-none absolute inset-0 z-10 text-gold opacity-80"
       aria-hidden="true"
     >
       <div data-rank="left" className="absolute top-0 left-0 h-full w-[42%]">

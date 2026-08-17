@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { aanbodNavItems } from "@/content/aanbod-nav.ts";
 import { BerrySpray } from "@/components/svg/BerrySpray";
 import { Bud } from "@/components/svg/Bud";
@@ -19,6 +19,7 @@ import {
 } from "@/lib/nav/motion.ts";
 import { gsap, useGSAP } from "@/lib/gsap/register";
 import { NAV_FOCUS, NAV_LINK } from "./classes.ts";
+import { NavTextLink } from "./NavTextLink";
 
 const ICONS: Record<OfferCategory, typeof Leaf> = {
   shop: Leaf,
@@ -54,6 +55,7 @@ export function MobileMenu({
   const openedOnce = useRef(false);
   const accordionOpened = useRef(false);
   const [aanbodOpen, setAanbodOpen] = useState(false);
+  const warpId = `nav-warp-${useId().replace(/:/g, "")}`;
 
   useGSAP(
     () => {
@@ -64,14 +66,32 @@ export function MobileMenu({
       const rows = list.current?.querySelectorAll("[data-nav-row]");
       if (open) {
         openedOnce.current = true;
+        const warp = panel.current.querySelector("[data-warp]");
         const tl = gsap.timeline({
           defaults: { ease: "power2.out", overwrite: true },
         });
-        tl.to(panel.current, {
-          autoAlpha: 1,
-          y: 0,
-          duration: secondsForMotion(NAV_OPEN_MS, reduced),
-        }).fromTo(
+        if (warp) {
+          gsap.fromTo(
+            warp,
+            { attr: { scale: reduced ? 0 : 26 } },
+            {
+              attr: { scale: 0 },
+              duration: secondsForMotion(480, reduced),
+              ease: "power2.out",
+              overwrite: true,
+            },
+          );
+        }
+        tl.fromTo(
+          panel.current,
+          { autoAlpha: 0, y: -14, scaleY: reduced ? 1 : 0.88 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            scaleY: 1,
+            duration: secondsForMotion(NAV_OPEN_MS, reduced),
+          },
+        ).fromTo(
           rows ?? [],
           { autoAlpha: 0, y: -8 },
           {
@@ -171,26 +191,45 @@ export function MobileMenu({
     <div
       ref={panel}
       id="mobile-nav"
-      className={`absolute inset-x-0 top-full z-30 origin-top will-change-transform md:hidden ${
+      className={`absolute inset-x-0 top-full z-30 origin-top pt-3 will-change-transform md:hidden ${
         open ? "" : "pointer-events-none"
       }`}
       inert={!open}
       aria-hidden={!open}
     >
-      <div className="relative overflow-hidden border-b border-gold/40 bg-paper px-6 pt-4 pb-8">
-        <VineLeft className="pointer-events-none absolute top-2 left-0 h-20 w-[46%] text-gold opacity-[0.18]" />
-        <VineRight className="pointer-events-none absolute top-2 right-0 h-20 w-[46%] text-gold opacity-[0.18]" />
+      <svg className="absolute h-0 w-0" aria-hidden="true">
+        <filter id={warpId}>
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.03"
+            numOctaves="2"
+            seed="2"
+            result="noise"
+          />
+          <feDisplacementMap
+            data-warp=""
+            in="SourceGraphic"
+            in2="noise"
+            scale="0"
+          />
+        </filter>
+      </svg>
+      <div
+        className="relative overflow-hidden rounded-[2rem] border border-gold/40 bg-night px-6 pt-5 pb-8 text-paper"
+        style={{ filter: `url(#${warpId})` }}
+      >
+        <VineLeft className="pointer-events-none absolute top-2 left-0 h-20 w-[46%] text-gold opacity-25" />
+        <VineRight className="pointer-events-none absolute top-2 right-0 h-20 w-[46%] text-blush opacity-25" />
         <div ref={list} className="relative flex flex-col gap-1">
           {left.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              data-nav-row=""
-              className={`py-2 ${NAV_LINK}`}
-              onClick={onClose}
-            >
-              {item.label}
-            </Link>
+            <div key={item.href} data-nav-row="">
+              <NavTextLink
+                href={item.href}
+                label={item.label}
+                className="py-2"
+                onClick={onClose}
+              />
+            </div>
           ))}
           <div data-nav-row="">
             <button
@@ -223,9 +262,9 @@ export function MobileMenu({
                   >
                     <Icon className="mt-0.5 h-7 w-5 shrink-0 text-gold" />
                     <span className="flex flex-col gap-0.5">
-                      <span className="font-serif text-base text-ink">{item.title}</span>
+                      <span className="font-serif text-base text-paper">{item.title}</span>
                       {item.text ? (
-                        <span className="text-xs font-light leading-snug text-muted">
+                        <span className="text-xs font-light leading-snug text-paper/70">
                           {item.text}
                         </span>
                       ) : null}
@@ -236,20 +275,19 @@ export function MobileMenu({
             </div>
           </div>
           {right.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              data-nav-row=""
-              className={`py-2 ${NAV_LINK}`}
-              onClick={onClose}
-            >
-              {item.label}
-            </Link>
+            <div key={item.href} data-nav-row="">
+              <NavTextLink
+                href={item.href}
+                label={item.label}
+                className="py-2"
+                onClick={onClose}
+              />
+            </div>
           ))}
           <Link
             href="/#contact"
             data-nav-row=""
-            className={`mt-3 inline-flex w-fit bg-moss px-4 py-2 text-sm font-medium tracking-wide text-paper hover:bg-ink ${NAV_FOCUS}`}
+            className={`mt-3 inline-flex w-fit rounded-full bg-gold px-4 py-2 text-sm font-medium tracking-wide text-night hover:bg-paper ${NAV_FOCUS}`}
             onClick={onClose}
           >
             {contactLabel}

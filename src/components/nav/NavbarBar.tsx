@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { NavbarFlowerIntro } from "@/components/animations/NavbarFlowerIntro";
+import { isActiveNav } from "@/lib/nav/active.ts";
 import {
   NAV_DESKTOP_MQ,
   NAV_SCROLL_PX,
@@ -11,9 +13,11 @@ import {
 } from "@/lib/nav/motion.ts";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap/register";
 import { AanbodDropdown } from "./AanbodDropdown";
-import { NAV_FOCUS, NAV_LINK } from "./classes";
+import { NAV_FOCUS } from "./classes";
 import { MenuToggle } from "./MenuToggle";
 import { MobileMenu } from "./MobileMenu";
+import { NavBloomField } from "./NavBloomField";
+import { NavTextLink } from "./NavTextLink";
 
 type NavLink = {
   href: string;
@@ -39,7 +43,7 @@ function ContactLink({
     <Link
       href="/#contact"
       onClick={onClick}
-      className={`bg-moss px-4 py-2 text-sm font-medium tracking-wide text-paper hover:bg-ink ${NAV_FOCUS}`}
+      className={`rounded-full bg-gold px-4 py-2 text-sm font-medium tracking-wide text-night hover:bg-paper ${NAV_FOCUS}`}
     >
       {label}
     </Link>
@@ -54,31 +58,26 @@ export function NavbarBar({
   contactLabel,
 }: NavbarBarProps) {
   const header = useRef<HTMLElement>(null);
-  const wash = useRef<HTMLDivElement>(null);
-  const edge = useRef<HTMLDivElement>(null);
+  const pill = useRef<HTMLDivElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname() ?? "/";
+  const aanbodActive = isActiveNav("/aanbod", pathname);
 
   useGSAP(
     () => {
-      if (!wash.current || !edge.current) {
+      if (!pill.current) {
         return;
       }
-      gsap.set(wash.current, { autoAlpha: 0.72 });
-      gsap.set(edge.current, { autoAlpha: 0.3 });
+      gsap.set(pill.current, { boxShadow: "0 8px 28px rgba(20, 18, 16, 0.18)" });
       ScrollTrigger.create({
         start: NAV_SCROLL_PX,
         onToggle: (self) => {
           const reduced = prefersReducedMotion();
-          const duration = secondsForMotion(280, reduced);
-          gsap.to(wash.current, {
-            autoAlpha: self.isActive ? 1 : 0.72,
-            duration,
-            ease: "power2.out",
-            overwrite: true,
-          });
-          gsap.to(edge.current, {
-            autoAlpha: self.isActive ? 0.95 : 0.3,
-            duration,
+          gsap.to(pill.current, {
+            boxShadow: self.isActive
+              ? "0 12px 32px rgba(20, 18, 16, 0.35)"
+              : "0 8px 28px rgba(20, 18, 16, 0.18)",
+            duration: secondsForMotion(280, reduced),
             ease: "power2.out",
             overwrite: true,
           });
@@ -128,56 +127,56 @@ export function NavbarBar({
   }, [mobileOpen]);
 
   return (
-    <header ref={header} className="sticky top-0 z-20">
-      <div ref={wash} className="pointer-events-none absolute inset-0 bg-paper" />
-      <div
-        ref={edge}
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gold/55"
-      />
-      <div className="relative mx-auto max-w-6xl px-6 pt-6 pb-4 md:pt-8">
-        <NavbarFlowerIntro />
-        <nav className="relative z-20" aria-label="Hoofdnavigatie">
-          <div className="grid grid-cols-3 items-center md:hidden">
-            <div className="justify-self-start">
-              <MenuToggle
-                open={mobileOpen}
-                onClick={() => setMobileOpen((value) => !value)}
-              />
-            </div>
-            <div className="justify-self-center" onClick={() => setMobileOpen(false)}>
-              {wordmark}
-            </div>
-            <div className="justify-self-end">
-              <ContactLink
-                label={contactLabel}
+    <header ref={header} className="sticky top-0 z-30 px-3 pt-3 md:px-4 md:pt-4">
+      <div className="relative mx-auto max-w-6xl">
+        <div
+          ref={pill}
+          className="relative rounded-full border border-gold/35 bg-night text-paper"
+        >
+          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-full">
+            <NavBloomField />
+            <NavbarFlowerIntro />
+          </div>
+          <nav className="relative z-20 px-3 py-2 md:px-5 md:py-2.5" aria-label="Hoofdnavigatie">
+            <div className="grid grid-cols-3 items-center md:hidden">
+              <div className="justify-self-start">
+                <MenuToggle
+                  open={mobileOpen}
+                  onClick={() => setMobileOpen((value) => !value)}
+                />
+              </div>
+              <div
+                className="justify-self-center text-paper"
                 onClick={() => setMobileOpen(false)}
-              />
+              >
+                {wordmark}
+              </div>
+              <div className="justify-self-end">
+                <ContactLink
+                  label={contactLabel}
+                  onClick={() => setMobileOpen(false)}
+                />
+              </div>
             </div>
-          </div>
-          <div className="hidden grid-cols-3 items-center md:grid">
-            <ul className="flex flex-wrap items-center justify-start gap-x-6 gap-y-2">
-              {left.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href} className={NAV_LINK}>
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-              <AanbodDropdown label={aanbodLabel} />
-            </ul>
-            <div className="flex justify-center">
-              {wordmark}
+            <div className="hidden grid-cols-3 items-center md:grid">
+              <ul className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2">
+                {left.map((item) => (
+                  <li key={item.href}>
+                    <NavTextLink href={item.href} label={item.label} />
+                  </li>
+                ))}
+                <AanbodDropdown label={aanbodLabel} active={aanbodActive} />
+              </ul>
+              <div className="flex justify-center text-paper">{wordmark}</div>
+              <div className="flex flex-wrap items-center justify-end gap-4">
+                {right.map((item) => (
+                  <NavTextLink key={item.href} href={item.href} label={item.label} />
+                ))}
+                <ContactLink label={contactLabel} />
+              </div>
             </div>
-            <div className="flex flex-wrap items-center justify-end gap-4">
-              {right.map((item) => (
-                <Link key={item.href} href={item.href} className={NAV_LINK}>
-                  {item.label}
-                </Link>
-              ))}
-              <ContactLink label={contactLabel} />
-            </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
         <MobileMenu
           open={mobileOpen}
           left={left}

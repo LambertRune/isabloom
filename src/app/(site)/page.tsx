@@ -16,7 +16,7 @@ export default async function HomePage() {
       <section id="hero" className="mx-auto max-w-6xl px-6 pt-8 pb-16">
         <ImagePlaceholder label="Hero-beeld volgt" className="min-h-[28rem] w-full" />
         <div className="mt-8 flex max-w-3xl flex-col gap-5">
-          <p className="text-sm font-light tracking-[0.18em] text-muted uppercase">
+          <p className="text-sm font-light tracking-[0.18em] text-berry uppercase">
             {HOME.heroEyebrow}
           </p>
           <h1 className="font-serif text-4xl leading-tight text-ink sm:text-6xl">
@@ -34,7 +34,7 @@ export default async function HomePage() {
           className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center"
         >
           <div className="flex flex-col gap-5">
-            <h2 className="font-serif text-3xl">{HOME.promiseTitle}</h2>
+            <h2 className="font-serif text-4xl">{HOME.promiseTitle}</h2>
             <p className="max-w-md text-lg font-light leading-relaxed">
               {HOME.promiseBody}
             </p>
@@ -48,14 +48,14 @@ export default async function HomePage() {
           <section id="diensten" className="mx-auto max-w-6xl px-6 py-20">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div className="flex flex-col gap-3">
-                <p className="text-sm font-light tracking-[0.18em] text-muted uppercase">
+                <p className="text-sm font-light tracking-[0.18em] text-leaf uppercase">
                   {HOME.servicesEyebrow}
                 </p>
-                <h2 className="font-serif text-3xl">{HOME.servicesTitle}</h2>
+                <h2 className="font-serif text-4xl">{HOME.servicesTitle}</h2>
               </div>
               <a
                 href="/diensten"
-                className="w-fit text-sm tracking-[0.16em] text-gold-deep uppercase"
+                className="w-fit text-sm font-semibold tracking-[0.16em] text-gold-deep uppercase"
               >
                 {HOME.servicesAllCta}
               </a>
@@ -77,7 +77,7 @@ export default async function HomePage() {
                   ) : null}
                   <a
                     href={service.slug ? `/diensten#${service.slug}` : "/diensten"}
-                    className="w-fit text-sm tracking-[0.16em] text-gold-deep uppercase"
+                    className="w-fit text-sm font-semibold tracking-[0.16em] text-gold-deep uppercase"
                   >
                     Verder lezen
                   </a>
@@ -93,14 +93,14 @@ export default async function HomePage() {
           <section id="portfolio" className="mx-auto max-w-6xl px-6 py-20">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div className="flex flex-col gap-3">
-                <p className="text-sm font-light tracking-[0.18em] text-muted uppercase">
+                <p className="text-sm font-light tracking-[0.18em] text-berry uppercase">
                   {HOME.portfolioEyebrow}
                 </p>
-                <h2 className="font-serif text-3xl">{HOME.portfolioTitle}</h2>
+                <h2 className="font-serif text-4xl">{HOME.portfolioTitle}</h2>
               </div>
               <a
                 href={portfolioHref()}
-                className="w-fit text-sm tracking-[0.16em] text-gold-deep uppercase"
+                className="w-fit text-sm font-semibold tracking-[0.16em] text-gold-deep uppercase"
               >
                 {HOME.portfolioCta}
               </a>
@@ -126,10 +126,10 @@ export default async function HomePage() {
           <section id="team" className="mx-auto max-w-6xl px-6 py-20">
             <div className="grid gap-10 md:grid-cols-2 md:items-start">
               <div className="flex flex-col gap-5">
-                <p className="text-sm font-light tracking-[0.18em] text-muted uppercase">
+                <p className="text-sm font-light tracking-[0.18em] text-blush uppercase">
                   {HOME.teamEyebrow}
                 </p>
-                <h2 className="font-serif text-3xl">{HOME.teamTitle}</h2>
+                <h2 className="font-serif text-4xl">{HOME.teamTitle}</h2>
                 <p className="max-w-md font-light leading-relaxed">{HOME.teamBody}</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -156,7 +156,7 @@ export default async function HomePage() {
       <section id="contact" className="mx-auto max-w-6xl px-6 py-20">
         <Hairline />
         <div className="mt-10 flex max-w-xl flex-col gap-6">
-          <h2 className="font-serif text-3xl">{HOME.contactTitle}</h2>
+          <h2 className="font-serif text-4xl">{HOME.contactTitle}</h2>
           <p className="font-light leading-relaxed">
             {content.phone || content.email
               ? `${content.city}.`
@@ -165,14 +165,14 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-center gap-3">
             <a
               href={content.email ? `mailto:${content.email}` : "#contact"}
-              className="bg-moss px-5 py-2.5 text-sm font-medium tracking-wide text-paper hover:bg-ink"
+              className="rounded-full bg-night px-5 py-2.5 text-sm font-medium tracking-wide text-gold hover:bg-gold hover:text-night"
             >
               {HOME.contactCta}
             </a>
             {content.phone ? (
               <a
                 href={`tel:${content.phone}`}
-                className="border border-gold px-5 py-2.5 text-sm tracking-wide text-gold-deep"
+                className="rounded-full border border-gold px-5 py-2.5 text-sm font-semibold tracking-wide text-gold-deep"
               >
                 {content.phone}
               </a>
@@ -180,7 +180,7 @@ export default async function HomePage() {
             {content.email ? (
               <a
                 href={`mailto:${content.email}`}
-                className="border border-gold px-5 py-2.5 text-sm tracking-wide text-gold-deep"
+                className="rounded-full border border-gold px-5 py-2.5 text-sm font-semibold tracking-wide text-gold-deep"
               >
                 {content.email}
               </a>
@@ -190,7 +190,7 @@ export default async function HomePage() {
                 href={content.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm tracking-[0.16em] text-gold-deep uppercase"
+                className="text-sm font-semibold tracking-[0.16em] text-gold-deep uppercase"
               >
                 Instagram
               </a>
@@ -200,7 +200,7 @@ export default async function HomePage() {
                 href={content.facebookUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm tracking-[0.16em] text-gold-deep uppercase"
+                className="text-sm font-semibold tracking-[0.16em] text-gold-deep uppercase"
               >
                 Facebook
               </a>
@@ -210,7 +210,7 @@ export default async function HomePage() {
                 href={content.mapsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm tracking-[0.16em] text-gold-deep uppercase"
+                className="text-sm font-semibold tracking-[0.16em] text-gold-deep uppercase"
               >
                 Route
               </a>

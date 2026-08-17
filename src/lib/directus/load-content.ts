@@ -3,17 +3,51 @@ import { AANBOD } from "@/content/aanbod";
 import { HOME } from "@/content/homepage";
 import { offerCategorySlug, type OfferCategory } from "@/lib/aanbod/categories.ts";
 import { slugFromTitle } from "@/lib/beheer/slug.ts";
+import { sortedFileIds } from "@/lib/beheer/files.ts";
 import { getDirectus } from "./client.ts";
 import { mapHomeContent, type CmsService, type HomeContent } from "./map-content.ts";
 
 type FileJunction = {
-  directus_files_id?: string | null;
+  directus_files_id?: string | { id?: string | null } | null;
+  sort?: number | null;
 };
 
-function fileIds(images: FileJunction[] | undefined): string[] {
-  return (images ?? [])
-    .map((item) => item.directus_files_id)
-    .filter((id): id is string => Boolean(id));
+type ServiceRow = {
+  title: string;
+  slug: string | null;
+  short_text: string | null;
+  images?: FileJunction[];
+};
+
+const SERVICE_QUERY = {
+  sort: ["sort"],
+  fields: ["title", "slug", "short_text", "images.sort", "images.directus_files_id"],
+  deep: { images: { _sort: ["sort"] } },
+};
+
+const OFFER_QUERY = {
+  sort: ["sort"],
+  fields: ["title", "category", "text", "active", "images.sort", "images.directus_files_id"],
+  deep: { images: { _sort: ["sort"] } },
+};
+
+function mapService(service: ServiceRow): CmsService {
+  return {
+    title: service.title,
+    short_text: service.short_text,
+    slug: service.slug,
+    images: sortedFileIds(service.images),
+  };
+}
+
+function fallbackServices() {
+  return HOME.services.map((service) => ({
+    title: service.title,
+    text: service.text,
+    slug: slugFromTitle(service.title),
+    image: null,
+    images: [] as string[],
+  }));
 }
 
 export async function loadHomeContent(): Promise<HomeContent> {
@@ -31,12 +65,7 @@ export async function loadHomeContent(): Promise<HomeContent> {
   try {
     const [settings, services, portfolio, team] = await Promise.all([
       client.request(readSingleton("site_settings")),
-      client.request(
-        readItems("services", {
-          sort: ["sort"],
-          fields: ["title", "slug", "short_text", "images.directus_files_id"],
-        }),
-      ),
+      client.request(readItems("services", SERVICE_QUERY)),
       client.request(
         readItems("portfolio_items", {
           sort: ["sort"],
@@ -51,14 +80,9 @@ export async function loadHomeContent(): Promise<HomeContent> {
       ),
     ]);
 
-    const mappedServices: CmsService[] = (services as CmsService[]).map((service) => ({
-      ...service,
-      images: fileIds(service.images as unknown as FileJunction[]),
-    }));
-
     return mapHomeContent({
       settings: settings as never,
-      services: mappedServices,
+      services: (services as ServiceRow[]).map(mapService),
       portfolio: portfolio as never,
       team: (team as Array<{ active?: boolean; name: string; title: string | null; photo: string | null }>).filter(
         (member) => member.active !== false,
@@ -70,16 +94,26 @@ export async function loadHomeContent(): Promise<HomeContent> {
 }
 
 export async function loadServices() {
-  const home = await loadHomeContent();
-  if (home.services.length > 0) {
-    return home.services;
+  const client = getDirectus();
+  if (!client) {
+    return fallbackServices();
   }
-  return HOME.services.map((service) => ({
-    title: service.title,
-    text: service.text,
-    slug: slugFromTitle(service.title),
-    image: null,
-  }));
+  try {
+    const services = await client.request(readItems("services", SERVICE_QUERY));
+    const mapped = (services as ServiceRow[]).map((service) => {
+      const images = sortedFileIds(service.images);
+      return {
+        title: service.title,
+        text: service.short_text ?? "",
+        slug: service.slug,
+        image: images[0] ?? null,
+        images,
+      };
+    });
+    return mapped.length > 0 ? mapped : fallbackServices();
+  } catch {
+    return fallbackServices();
+  }
 }
 
 export async function loadOfferGroups() {
@@ -91,12 +125,7 @@ export async function loadOfferGroups() {
     return fallback;
   }
   try {
-    const items = await client.request(
-      readItems("offer_items", {
-        sort: ["sort"],
-        fields: ["title", "category", "text", "active", "images.directus_files_id"],
-      }),
-    );
+    const items = await client.request(readItems("offer_items", OFFER_QUERY));
     const groups = { ...fallback };
     for (const item of items as Array<{
       title: string;
@@ -112,7 +141,7 @@ export async function loadOfferGroups() {
       groups[id].push({
         title: item.title,
         text: item.text ?? "",
-        image: fileIds(item.images)[0] ?? null,
+        image: sortedFileIds(item.images)[0] ?? null,
       });
     }
     return groups;

@@ -66,4 +66,23 @@ describe("navbar dropdown contract", () => {
     expect(loader).toContain("offerCategorySlug");
     expect(loader).not.toContain('item.category === "shop"');
   });
+
+  it("is a black gold pill with an animated bloom field and active route state", () => {
+    const bar = read("src/components/nav/NavbarBar.tsx");
+    const bloom = read("src/components/nav/NavBloomField.tsx");
+    const link = read("src/components/nav/NavTextLink.tsx");
+    expect(bar).toContain("rounded-full");
+    expect(bar).toContain("bg-night");
+    expect(bar).toContain("NavBloomField");
+    expect(link).toContain("aria-current");
+    expect(bloom).toContain("useGSAP");
+    expect(bloom).toContain("FlowerHead");
+  });
+
+  it("warps the mobile menu open instead of using a flat overlay", () => {
+    const mobile = read("src/components/nav/MobileMenu.tsx");
+    const toggle = read("src/components/nav/MenuToggle.tsx");
+    expect(mobile).toContain("feDisplacementMap");
+    expect(toggle).toContain("elastic");
+  });
 });

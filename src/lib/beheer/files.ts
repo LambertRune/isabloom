@@ -1,6 +1,25 @@
 type FileJunction = {
-  directus_files_id?: string | null;
+  directus_files_id?: string | { id?: string | null } | null;
+  sort?: number | null;
 };
+
+function junctionFileId(item: FileJunction): string | null {
+  const value = item.directus_files_id;
+  if (!value) {
+    return null;
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  return value.id ?? null;
+}
+
+export function sortedFileIds(value: FileJunction[] | null | undefined): string[] {
+  return [...(value ?? [])]
+    .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
+    .map(junctionFileId)
+    .filter((id): id is string => Boolean(id));
+}
 
 export function firstFileId(
   value: string | { id?: string | null } | FileJunction[] | null | undefined,
@@ -12,7 +31,7 @@ export function firstFileId(
     return value;
   }
   if (Array.isArray(value)) {
-    return value.find((item) => item.directus_files_id)?.directus_files_id ?? null;
+    return sortedFileIds(value)[0] ?? null;
   }
   return value.id ?? null;
 }

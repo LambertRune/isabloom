@@ -11,13 +11,40 @@ export const metadata: Metadata = {
     "Business styling, home styling en events door Isabloom in Zwevezele.",
 };
 
+function ServiceImages({ images, title }: { images: string[]; title: string }) {
+  if (images.length === 0) {
+    return null;
+  }
+  if (images.length === 1) {
+    return (
+      <CmsImage fileId={images[0] ?? null} alt={title} className="min-h-72 w-full" />
+    );
+  }
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {images.slice(0, 4).map((fileId, index) => (
+        <CmsImage
+          key={fileId}
+          fileId={fileId}
+          alt={`${title} ${index + 1}`}
+          className={
+            index % 2 === 1
+              ? "min-h-52 w-full translate-y-4 md:min-h-56"
+              : "min-h-56 w-full md:min-h-64"
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
 export default async function DienstenPage() {
   const services = await loadServices();
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <header className="max-w-2xl">
-        <p className="text-sm font-light tracking-[0.18em] text-muted uppercase">
+        <p className="text-sm font-light tracking-[0.18em] text-berry uppercase">
           Isabloom
         </p>
         <h1 className="mt-4 font-serif text-4xl sm:text-5xl">Diensten</h1>
@@ -36,25 +63,14 @@ export default async function DienstenPage() {
                   index % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""
                 }`}
               >
-                <div className="grid grid-cols-2 gap-3">
-                  <CmsImage
-                    fileId={service.image}
-                    alt={`${service.title} 1`}
-                    className="min-h-56 w-full"
-                  />
-                  <CmsImage
-                    fileId={null}
-                    alt={`${service.title} 2`}
-                    className="min-h-56 w-full"
-                  />
-                </div>
+                <ServiceImages images={service.images} title={service.title} />
                 <div className="flex flex-col gap-5">
-                  <h2 className="font-serif text-3xl">{service.title}</h2>
+                  <h2 className="font-serif text-4xl">{service.title}</h2>
                   <Hairline />
                   <p className="font-light leading-relaxed">{service.text}</p>
                   <Link
                     href="/#contact"
-                    className="w-fit bg-moss px-5 py-2.5 text-sm font-medium tracking-wide text-paper hover:bg-ink"
+                    className="w-fit rounded-full bg-night px-5 py-2.5 text-sm font-medium tracking-wide text-gold hover:bg-gold hover:text-night"
                   >
                     Contacteer ons
                   </Link>

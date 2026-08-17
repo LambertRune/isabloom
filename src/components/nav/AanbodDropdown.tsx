@@ -24,7 +24,7 @@ import {
 } from "@/lib/nav/motion.ts";
 import { gsap, useGSAP } from "@/lib/gsap/register";
 import type { OfferCategory } from "@/lib/aanbod/categories.ts";
-import { NAV_FOCUS, NAV_LINK } from "./classes.ts";
+import { NAV_FOCUS, NAV_LINK, NAV_LINK_ACTIVE } from "./classes.ts";
 
 const ICONS: Record<OfferCategory, typeof Leaf> = {
   shop: Leaf,
@@ -34,9 +34,10 @@ const ICONS: Record<OfferCategory, typeof Leaf> = {
 
 type AanbodDropdownProps = {
   label: string;
+  active?: boolean;
 };
 
-export function AanbodDropdown({ label }: AanbodDropdownProps) {
+export function AanbodDropdown({ label, active = false }: AanbodDropdownProps) {
   const items = aanbodNavItems();
   const root = useRef<HTMLLIElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -225,9 +226,10 @@ export function AanbodDropdown({ label }: AanbodDropdownProps) {
         ref={trigger}
         type="button"
         id={triggerId}
-        className={`${NAV_LINK} inline-flex items-center gap-1`}
+        className={`${active ? NAV_LINK_ACTIVE : NAV_LINK} inline-flex items-center gap-1`}
         aria-haspopup="true"
         aria-expanded={open}
+        aria-current={active ? "page" : undefined}
         aria-controls={menuId}
         onClick={() => {
           if (open) {
@@ -248,9 +250,9 @@ export function AanbodDropdown({ label }: AanbodDropdownProps) {
         aria-labelledby={triggerId}
         aria-hidden={!open}
         onKeyDown={onMenuKeyDown}
-        className="absolute top-full left-0 z-30 mt-3 min-w-[18.5rem] origin-top will-change-transform"
+        className="absolute top-full left-0 z-40 mt-3 min-w-[18.5rem] origin-top will-change-transform"
       >
-        <div className="border border-gold/55 bg-paper px-3 py-3">
+        <div className="rounded-2xl border border-gold/45 bg-night px-3 py-3">
           <ul className="flex flex-col gap-1">
             {items.map((item, index) => {
               const Icon = ICONS[item.key];
@@ -264,15 +266,15 @@ export function AanbodDropdown({ label }: AanbodDropdownProps) {
                       itemNodes.current[index] = node;
                     }}
                     onClick={close}
-                    className={`flex items-start gap-3 px-2 py-2 no-underline ${NAV_FOCUS}`}
+                    className={`flex items-start gap-3 rounded-xl px-2 py-2 no-underline ${NAV_FOCUS}`}
                   >
                     <Icon className="mt-0.5 h-8 w-6 shrink-0 text-gold" />
                     <span className="flex flex-col gap-1">
-                      <span className="font-serif text-base tracking-normal text-ink">
+                      <span className="font-serif text-base tracking-normal text-paper">
                         {item.title}
                       </span>
                       {item.text ? (
-                        <span className="text-xs font-light leading-snug tracking-normal text-muted">
+                        <span className="text-xs font-light leading-snug tracking-normal text-paper/70">
                           {item.text}
                         </span>
                       ) : null}

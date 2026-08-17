@@ -27,17 +27,31 @@ export function MenuToggle({ open, onClick }: MenuToggleProps) {
       const top = node.querySelector('[data-line="top"]');
       const mid = node.querySelector('[data-line="mid"]');
       const bot = node.querySelector('[data-line="bot"]');
-      if (!top || !mid || !bot) {
+      const mark = node.querySelector("svg");
+      if (!top || !mid || !bot || !mark) {
         return;
       }
       const reduced = prefersReducedMotion();
       const duration = secondsForMotion(open ? NAV_OPEN_MS : NAV_CLOSE_MS, reduced);
+      if (open && !reduced) {
+        gsap.fromTo(
+          mark,
+          { scaleX: 1.4, scaleY: 0.72 },
+          {
+            scaleX: 1,
+            scaleY: 1,
+            duration: secondsForMotion(420, reduced),
+            ease: "elastic.out(1, 0.55)",
+            overwrite: true,
+          },
+        );
+      }
       gsap.to(top, {
         y: open ? 6 : 0,
         rotation: open ? 45 : 0,
         transformOrigin: "50% 50%",
         duration,
-        ease: "power2.out",
+        ease: open ? "elastic.out(1, 0.7)" : "power2.in",
         overwrite: true,
       });
       gsap.to(mid, {
@@ -51,7 +65,7 @@ export function MenuToggle({ open, onClick }: MenuToggleProps) {
         rotation: open ? -45 : 0,
         transformOrigin: "50% 50%",
         duration,
-        ease: "power2.out",
+        ease: open ? "elastic.out(1, 0.7)" : "power2.in",
         overwrite: true,
       });
     },
@@ -68,7 +82,7 @@ export function MenuToggle({ open, onClick }: MenuToggleProps) {
       aria-label={open ? "Menu sluiten" : "Menu openen"}
       onClick={onClick}
     >
-      <svg viewBox="0 0 24 24" fill="none" className="size-7" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" className="size-7 origin-center" aria-hidden="true">
         <g data-line="top">
           <path
             d="M4 7.5 C 8 6, 16 6, 20 7.5"

@@ -26,7 +26,7 @@ pnpm lint
 pnpm build
 ```
 
-Kleuren en fontnamen staan in `src/design/tokens.ts` en worden herhaald in `src/app/globals.css`.
+Kleuren en fontnamen staan in `src/design/tokens.ts` en worden als CSS-variabelen op `<html>` gezet. `globals.css` mapt die tokens, het is geen tweede palet.
 
 ## CMS lokaal
 

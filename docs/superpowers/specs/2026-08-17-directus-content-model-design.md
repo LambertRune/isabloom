@@ -240,7 +240,7 @@ Junctionvelden: `sort` (integer), `alt` (string). Labels: Volgorde, Alt-tekst. D
 
 Geen Directus-folders per type in v1. Eén uploads-volume. Als winkel- en verhuurgalerijen groeien, wordt de file library een lange platte lijst. Dat is geen blocker voor PR1; folders per type horen in een latere iteratie.
 
-Bestanden blijven in Directus. Later gebruikt Next.js `next/image` plus Directus transforms (`?width=` en `format=webp`). PR1 zet alleen het opslagpad klaar.
+Bestanden blijven in Directus. De publieke site laadt ze via `/media/[id]` (token blijft uit de HTML) en `next/image`. De proxy stuurt `width`, `quality` en `format=webp` 1:1 door naar Directus asset-transforms. Beheer-previews blijven een gewone `<img>`.
 
 ## Tests
 
@@ -285,25 +285,29 @@ Dit is de belofte "nieuwe collectie/veld zonder de frontend te breken": additive
 - Geen em-dashes in copy, comments of README.
 - Geen secrets. `.env` staat in `.gitignore`. Volumes `data/` en `uploads/` ook, met `.gitkeep` waar nodig.
 
-## Volgende subprojecten (niet deze PR)
+## Volgende subprojecten
 
-2. Next.js-skelet + design tokens + typografieproef (pas na expliciete font- en kleurkeuze).
-3. Botanische SVG-bibliotheek + navbar-intro (GSAP).
-4. Homepagina-secties tegen dit CMS.
-5. Diensten- en aanbodpagina's.
+Stand op `pre-production` (2026-08-17). Niet opnieuw bouwen wat al in de branch staat.
+
+Klaar op deze branch (met CMS-fallbacks en placeholders):
+
+2. Next.js-skelet + design tokens + typografie (Fraunces + Source Sans 3, palet in `src/design/tokens.ts`).
+3. Botanische SVG-bibliotheek + navbar-intro (GSAP), inclusief pill-nav en dropdown Aanbod.
+4. Homepagina-secties tegen dit CMS (diensten, portfolio, team, contact; leeg = verborgen).
+5. Diensten- en aanbodpagina's. Diensten-collage gebruikt `services.images` op junction-`sort`. Portfolio-CTA wijst naar `/aanbod` zolang `PORTFOLIO_HAS_OWN_PAGE` false is.
+
+Nog te bouwen:
+
 6. Blog-routes.
-7. Seizoensresolver (tegen `season_themes`).
-8. Contactformulier + Zoho.
+7. Seizoensresolver tegen datums in `season_themes`. De accent-guard (WCAG AA op paper, anders afzwakken of `goldDeep`) staat al in `src/lib/season/resolve-theme.ts`.
+8. Contactformulier + Zoho. Contact is nu het anker `/#contact` (geen aparte `/contact`).
 9. SEO, ISR, revalidate-webhook.
 10. Dokploy-compose met de `web`-service erbij.
 
 ## Open punten die bewust wachten
 
-Deze vragen horen bij latere PRs, niet bij het CMS-schema:
-
-- Exacte logo-goudhex (samplen uit het aangeleverde logo-bestand, dat nu niet in de repo zit).
-- Serif/sans-keuze en CTA-accent (donkergroen of terracotta) voor het basispalet.
-- Portfolio als `/portfolio` of alleen een sectie op de startpagina.
+- Exacte logo-goudhex: samplen uit het aangeleverde logo-bestand (zit nog niet in de repo) en meteen toetsen op WCAG AA tegen paper. `goldDeep` (#7C6136) is de tijdelijke AA-veilige linkkleur.
+- Terracotta als CTA-alternatief: eerst meten op paper (≥ 4.5:1), daarna pas kiezen. Moss (#1F3D2B) is de huidige CTA.
+- Portfolio als eigen `/portfolio`-route. Tot die beslissing blijft de CTA `/aanbod` (`src/content/routes.ts`).
 - Directus-folders per bestandstype (wanneer de file library te plat wordt).
-- Contact als `/contact` of anker.
-- Werkelijke seizoensvensters en accentkleuren, in te vullen in Directus door de klant of in een latere design-PR.
+- Werkelijke seizoensvensters en accentkleuren, in te vullen in Directus. Elke `accent_color` gaat door de AA-guard voordat hij CSS wordt.
